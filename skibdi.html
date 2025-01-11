@@ -60,6 +60,7 @@
 <!-- Home Page -->
 <div id="homePage">
     <h1>Plant up: Click to start playing</h1>
+    <p>This game shows the journey of a seed that's soon going to blossom into a beautiful flower. But people nowadays use pesticides for everything when it's not needed; just for the sake of making them look better, healthier? Which is ironic as they are not actually healthy for the plant. So this is basically the natural  journey of the seed, to show you that something so unnatural is not needed for a completely natural process.</p>
     <button id="playButton" onclick="startGame()">Play</button>
 </div>
 
@@ -72,11 +73,21 @@
 <!-- Next Level Page -->
 <div id="nextLevelPage">
     <h1>Level Complete!</h1>
-    <p>Congratulations! Get ready for the next level.</p>
+    <p>See, now the seed grew into a sapling!!! All with just some water and sunlight, and it's growing! Time to level up! </p>
     <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
 </div>
 
 <script>
+let canvas, ctx;
+let pacmanX, pacmanY, seedImage, points, collectedPoints, currentLevel;
+
+const tileSize = 40; // Seed size
+const initialPoints = [
+    { x: 100, y: 100 },
+    { x: 200, y: 200 },
+    { x: 300, y: 300 }
+];
+
 // Function to start the game
 function startGame() {
     document.getElementById("homePage").style.display = "none";
@@ -95,36 +106,18 @@ function startNextLevel() {
     }
 }
 
-// Define constants for the game
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-const tileSize = 40; // Increased seed size
-const cols = 20;
-const rows = 15;
-const speed = 6; // Seed speed
-
-let pacmanX = 180, pacmanY = 180;
-let seedImage = new Image();
-seedImage.src = 'https://img.freepik.com/premium-vector/pixel-art-illustration-coffee-bean-pixelated-coffee-bean-coffee-bean-pixelated-pixel-art_1038602-1029.jpg'; // Replace with the actual path to your seed image
-
-const initialPoints = [
-    { x: 100, y: 100 },
-    { x: 200, y: 200 },
-    { x: 300, y: 300 }
-];
-
-let collectedPoints = [];
-let currentLevel = 1;
-
 // Initialize the game
 function initGame() {
+    canvas = document.getElementById("gameCanvas");
+    ctx = canvas.getContext("2d");
     points = initialPoints;
     collectedPoints = [];
     pacmanX = 180;
     pacmanY = 180;
-    document.addEventListener('keydown', movePacman);
+    seedImage = new Image();
+    seedImage.src = 'https://img.freepik.com/premium-vector/pixel-art-illustration-coffee-bean-pixelated-coffee-bean-coffee-bean-pixelated-pixel-art_1038602-1029.jpg';
     seedImage.onload = drawPacman;
+    document.addEventListener('keydown', movePacman);
     drawPoints();
 }
 
@@ -245,7 +238,6 @@ function initLevel3() {
     seedImage.onload = drawPacman;
     drawPoints();
 }
-
 </script>
 
 </body>
