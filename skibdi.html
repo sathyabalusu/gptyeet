@@ -3,30 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Number Game</title>
+    <title>Rock Paper Scissors Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Guess the Number Game</h1>
-    <p>Guess a number between 1 and 100:</p>
-    <input type="number" id="guess">
-    <button onclick="checkGuess()">Submit Guess</button>
-    <p id="message"></p>
+
+    <h1>Rock, Paper, Scissors</h1>
+    <p>Choose your move:</p>
+    <button onclick="playGame('rock')">Rock</button>
+    <button onclick="playGame('paper')">Paper</button>
+    <button onclick="playGame('scissors')">Scissors</button>
+
+    <div id="result"></div>
 
     <script>
-        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        function playGame(playerChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const computerChoice = choices[Math.floor(Math.random() * 3)];
+            let resultMessage = '';
 
-        function checkGuess() {
-            let userGuess = document.getElementById('guess').value;
-            let message = document.getElementById('message');
-
-            if (userGuess == secretNumber) {
-                message.textContent = "Congratulations! You guessed the right number!";
-            } else if (userGuess > secretNumber) {
-                message.textContent = "Too high! Try again.";
+            if (playerChoice === computerChoice) {
+                resultMessage = `It's a tie! Both chose ${playerChoice}.`;
+            } else if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                resultMessage = `You win! ${playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1)} beats ${computerChoice}.`;
             } else {
-                message.textContent = "Too low! Try again.";
+                resultMessage = `You lose! ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)} beats ${playerChoice}.`;
             }
+
+            document.getElementById('result').innerText = resultMessage;
         }
     </script>
+
 </body>
 </html>
+
