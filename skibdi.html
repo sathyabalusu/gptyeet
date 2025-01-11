@@ -111,30 +111,11 @@ const points = [
 ];
 let collectedPoints = [];
 
-// Maze layout (1s are walls, 0s are paths)
-const maze = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
-    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-];
-
 // Initialize the game
 function initGame() {
     document.addEventListener('keydown', movePacman);
     seedImage.onload = drawPacman;
-    drawMaze();
+    drawPoints();
 }
 
 // Reset the game for the next level
@@ -143,26 +124,25 @@ function resetGame() {
     pacmanY = 180;
     collectedPoints = [];
     drawPacman();
-    drawMaze();
+    drawPoints();
 }
 
-// Draw the maze
-function drawMaze() {
-    const blockSize = canvas.width / cols;
-    for (let y = 0; y < maze.length; y++) {
-        for (let x = 0; x < maze[y].length; x++) {
-            if (maze[y][x] === 1) {
-                ctx.fillStyle = MAZE_COLOR;
-                ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
-            }
+// Draw points on the canvas
+function drawPoints() {
+    ctx.fillStyle = "yellow";
+    points.forEach(point => {
+        if (!collectedPoints.includes(point)) {
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, tileSize / 4, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fill();
         }
-    }
+    });
 }
 
 // Draw Pac-Man as a seed
 function drawPacman() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawMaze();
     ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
     drawPoints();
     checkForCollisions();
@@ -170,7 +150,41 @@ function drawPacman() {
 
 // Move Pac-Man
 function movePacman(event) {
-    let newX = pacmanX;
-    let newY = pacmanY;
     const step = 10;
-   [_{{{CITATION{{{_1{](https://github.com/SUNYunZeng/ChordDependencyChart/tree/57d410f4c52d25f50b5b976b81ac12de9cf21f3f/README.md)[_{{{CITATION{{{_2{](https://github.com/buribalazs/smooth-drag-order/tree/7b40d21d076c3e31765f61481f537beaf4c5ec9f/README.md)[_{{{CITATION{{{_3{](https://github.com/shunnpyaepyaeaung/plant-store-php-project/tree/cb927e1225b5544cf9b2a0aeeefbf7dc54401a8c/plant-detail.php)[_{{{CITATION{{{_4{](https://github.com/w84death/BraveSirRobin/tree/90ba91deb0d5cc0cc1789ba9dd0eb61164baa66a/lib%2Fgame%2Flevels%2Fforest.js)[_{{{CITATION{{{_5{](https://github.com/mumuy/pacman/tree/ed97bc223243a22fc7f36b0021d5644aba7be060/index.js)[_{{{CITATION{{{_6{](https://github.com/juanlamarao/2dRayCasting/tree/6f6dd7ff797b10808d2f0f0654a5d04ac4d54cc5/raycast.js)[_{{{CITATION{{{_7{](https://github.com/Cameroo2/ShadowsAltisMods/tree/16027b0efaf7c5fa76f0de1a0cf59c8cd6cf62fb/toontown%2Fminigame%2FMazeData.py)[_{{{CITATION{{{_8{](https://github.com/http404error/outlaw-of-gravity/tree/7a5437a4fbadccb7addc8b807f924b4f7e77d7fc/lib%2Fgame%2Flevels%2Fcrate7.js)[_{{{CITATION{{{_9{](https://github.com/bchan061/new-website/tree/1f0addde5c32fd4a8114a393582435d39c1fb340/public%2Fgames%2FCommandoJoe2%2Flib%2Fgame%2Flevels%2Flevel27.js)[_{{{CITATION{{{_10{](https://github.com/liruenth/liruenth.github.io/tree/aa474657f43e0ca02725432ddd4b5bc8111617ef/JS13k_2017%2Fgame.js)[_{{{CITATION{{{_11{](https://github.com/mysteryman187/santas-labyrinth/tree/8fda1cda588b09cd3c5278d3c31c8d3eb85f673e/src%2Fmaps%2Flevel-5.js)[_{{{CITATION{{{_12{](https://github.com/kyoungmingo/Rangenet_customize/tree/5c66c5e1711b5f8581ecba954be0417c00c9d96a/lidar-bonnetal%2Ftrain%2Ftasks%2Fsemantic%2Fpostproc%2FborderMask.py)[_{{{CITATION{{{_13{](https://github.com/reetipd/JS-Assignment/tree/9ff584471b10b9d5a406707646433f01155379bb/finalProject%2Fjs%2Flevel.js)[_{{{CITATION{{{_14{](https://github.com/mariamayer/emoji-pacman/tree/80d9ca356a1a849199152e45efd018aa9fe8d33e/js%2Fapp.js)[_{{{CITATION{{{_15{](https://github.com/ctnlaring/platformer/tree/bf0c2896d143e929fdf2182ac121c500a738ffc2/map1.py)[_{{{CITATION{{{_16{](https://github.com/rajishwagh/Cooperative-SLAM-FULL-Collection/tree/f572aa1e2052d6098df0ffa0c3175782fc315283/Main_File.py)[_{{{CITATION{{{_17{](https://github.com/teambi0s/InCTFi/tree/b249e5b41dba80bcbfc6ccd986c8fd64d8afa87c/2021%2FReversing%2Fmiz%2Fadmin%2Fsrc%2Fbacharu.rs)[_{{{CITATION{{{_18{](https://github.com/kunjpatel1402/python_scripts/tree/fe66a7f9d964d0c1b3fb46658bca8cc5dce19d85/finder.py)[_{{{CITATION{{{_19{](https://github.com/http404error/outlaw-of-gravity/tree/7a5437a4fbadccb7addc8b807f924b4f7e77d7fc/lib%2Fgame%2Flevels%2Fspike7.js)[_{{{CITATION{{{_20{](https://github.com/5R33CH4/Games/tree/59cf4af6b3c852ea5a17705315841e7af4bec514/ninja%2Fjs%2Flevels%2Flevels.js)[_{{{CITATION{{{_21{](https://github.com/ZpeedX/AI-Projekt/tree/97538e3cc63963ca65dcaa0cc6454e109b35b35f/levels.py)[_{{{CITATION{{{_22{](https://github.com/Nachomunch/Pathfinder-2018/tree/78c5e981e51b589cf9a13503c8a237a087e70991/Pathfinder%2FlevelGeneration.js)
+    switch (event.key) {
+        case 'ArrowUp':
+            if (pacmanY - step > tileSize / 2) pacmanY -= step;
+            break;
+        case 'ArrowDown':
+            if (pacmanY + step < canvas.height - tileSize / 2) pacmanY += step;
+            break;
+        case 'ArrowLeft':
+            if (pacmanX - step > tileSize / 2) pacmanX -= step;
+            break;
+        case 'ArrowRight':
+            if (pacmanX + step < canvas.width - tileSize / 2) pacmanX += step;
+            break;
+    }
+    drawPacman();
+}
+
+// Check for collisions with points
+function checkForCollisions() {
+    points.forEach(point => {
+        if (!collectedPoints.includes(point) && 
+            Math.abs(pacmanX - point.x) < tileSize / 2 && 
+            Math.abs(pacmanY - point.y) < tileSize / 2) {
+            collectedPoints.push(point);
+            drawPoints();
+            if (collectedPoints.length === points.length) {
+                document.getElementById("gamePage").style.display = "none";
+                document.getElementById("nextLevelPage").style.display = "block";
+            }
+        }
+    });
+}
+
+</script>
+
+</body>
+</html>
