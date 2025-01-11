@@ -20,8 +20,9 @@
         }
 
         canvas {
-            border: 2px solid #fff;
-            background-color: #111;
+            border: 2px solid #fff; 
+            background: url('https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp') no-repeat center center; /
+            background-size: cover;
         }
 
         #playButton {
@@ -45,6 +46,8 @@
 
         #gamePage {
             display: none;
+            position: relative;
+            background-color: #6f8b66; 
         }
 
         #nextLevelPage {
@@ -75,6 +78,13 @@
 </div>
 
 <script>
+// Function to start the game
+function startGame() {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    initGame();
+}
+
 // Define constants for the game
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -82,48 +92,44 @@ const ctx = canvas.getContext("2d");
 const tileSize = 30;
 const cols = 20;
 const rows = 15;
-const speed = 3; // Pac-Man speed
+const speed = 3; // Seed speed
 
-// Define maze layout (1: wall, 0: path, 2: dot, 3: exit, 4: ghost)
-let maze = [
-    [3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 4, 1],
-    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2, 0, 1],
-    [1, 0, 1, 0, 2, 0, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1],
-    [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 1],
-    [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 1],
-    [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
-    [1, 0, 2, 0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 1, 1, 0, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1],
-    [1, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 1, 4, 0, 2, 0, 1],
-    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 1],
-    [1, 4, 1, 2, 0, 2, 0, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 1],
-    [1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0, 0, 4, 0, 1, 0, 1, 1, 1]
-];
+let pacmanX = 180, pacmanY = 180;
+let seedImage = new Image();
+seedImage.src = 'https://img.freepik.com/premium-vector/pixel-art-illustration-coffee-bean-pixelated-coffee-bean-coffee-bean-pixelated-pixel-art_1038602-1029.jpg'; // Replace with the actual path to your seed image
 
-       const pacman = document.getElementById('pacman');
-        let pacmanX = 180, pacmanY = 180;
+// Initialize the game
+function initGame() {
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
+}
 
-        document.addEventListener('keydown', movePacman);
+// Draw Pac-Man as a seed
+function drawPacman() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
+}
 
-        function movePacman(event) {
-            const step = 10;
-            switch (event.key) {
-                case 'ArrowUp':
-                    if (pacmanY > 0) pacmanY -= step;
-                    break;
-                case 'ArrowDown':
-                    if (pacmanY < 360) pacmanY += step;
-                    break;
-                case 'ArrowLeft':
-                    if (pacmanX > 0) pacmanX -= step;
-                    break;
-                case 'ArrowRight':
-                    if (pacmanX < 360) pacmanX += step;
-                    break;
-            }
-            pacman.style.top = pacmanY + 'px';
-            pacman.style.left = pacmanX + 'px';
+// Move Pac-Man
+function movePacman(event) {
+    const step = 10;
+    switch (event.key) {
+        case 'ArrowUp':
+            if (pacmanY - step > tileSize / 2) pacmanY -= step;
+            break;
+        case 'ArrowDown':
+            if (pacmanY + step < canvas.height - tileSize / 2) pacmanY += step;
+            break;
+        case 'ArrowLeft':
+            if (pacmanX - step > tileSize / 2) pacmanX -= step;
+            break;
+        case 'ArrowRight':
+            if (pacmanX + step < canvas.width - tileSize / 2) pacmanX += step;
+            break;
+    }
+    drawPacman();
+}
+
 </script>
 
 </body>
