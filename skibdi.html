@@ -22,7 +22,6 @@
         canvas {
             border: 2px solid #fff; 
             background: url('https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp') no-repeat center center; 
-            background-size: cover;
         }
 
         #playButton {
@@ -73,7 +72,7 @@
 <!-- Next Level Page -->
 <div id="nextLevelPage">
     <h1>Level Complete!</h1>
-    <p>Here are some informational sustainable practices you can learn about and do, before moving on to the next stage.</p>
+    <p>Congratulations! Get ready for the next level.</p>
     <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
 </div>
 
@@ -89,17 +88,17 @@ function startGame() {
 function startNextLevel() {
     document.getElementById("nextLevelPage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
-    initGameWithMaze();
+    resetGame();
 }
 
 // Define constants for the game
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const tileSize = 40; // Increased seed size
+const tileSize = 30;
 const cols = 20;
 const rows = 15;
-const speed = 6; // Seed speed
+const speed = 3; // Seed speed
 
 let pacmanX = 180, pacmanY = 180;
 let seedImage = new Image();
@@ -111,22 +110,20 @@ const points = [
     { x: 300, y: 300 }
 ];
 let collectedPoints = [];
-let maze = [];
+let maze = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1],
+    [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+];
 
 // Initialize the game
 function initGame() {
     document.addEventListener('keydown', movePacman);
-    seedImage.onload = drawPacman;
-    drawPoints();
-}
-
-// Initialize the game with a maze
-function initGameWithMaze() {
-    document.addEventListener('keydown', movePacman);
-    seedImage.onload = drawPacman;
-    generateMaze();
-    drawMaze();
-    drawPoints();
+    seedImage.onload = drawGame;
 }
 
 // Reset the game for the next level
@@ -134,8 +131,28 @@ function resetGame() {
     pacmanX = 180;
     pacmanY = 180;
     collectedPoints = [];
-    drawPacman();
+    drawGame();
+}
+
+// Draw the game elements
+function drawGame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMaze();
     drawPoints();
+    drawPacman();
+    checkForCollisions();
+}
+
+// Draw the maze
+function drawMaze() {
+    ctx.fillStyle = "#fff";
+    for (let row = 0; row < maze.length; row++) {
+        for (let col = 0; col < maze[row].length; col++) {
+            if (maze[row][col] === 1) {
+                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+            }
+        }
+    }
 }
 
 // Draw points on the canvas
@@ -153,31 +170,39 @@ function drawPoints() {
 
 // Draw Pac-Man as a seed
 function drawPacman() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
-    drawPoints();
-    drawMaze();
-    checkForCollisions();
 }
 
 // Move Pac-Man
 function movePacman(event) {
     const step = 10;
+    let newX = pacmanX, newY = pacmanY;
     switch (event.key) {
         case 'ArrowUp':
-            if (pacmanY - step > tileSize / 2) pacmanY -= step;
+            newY -= step;
             break;
         case 'ArrowDown':
-            if (pacmanY + step < canvas.height - tileSize / 2) pacmanY += step;
+            newY += step;
             break;
         case 'ArrowLeft':
-            if (pacmanX - step > tileSize / 2) pacmanX -= step;
+            newX -= step;
             break;
         case 'ArrowRight':
-            if (pacmanX + step < canvas.width - tileSize / 2) pacmanX += step;
+            newX += step;
             break;
     }
-    drawPacman();
+    if (canMoveTo(newX, newY)) {
+        pacmanX = newX;
+        pacmanY = newY;
+        drawGame();
+    }
+}
+
+// Check if Pac-Man can move to a new position
+function canMoveTo(x, y) {
+    const col = Math.floor(x / tileSize);
+    const row = Math.floor(y / tileSize);
+    return maze[row] && maze[row][col] === 0;
 }
 
 // Check for collisions with points
@@ -193,45 +218,6 @@ function checkForCollisions() {
                 document.getElementById("nextLevelPage").style.display = "block";
             }
         }
-    });
-}
-
-// Generate a simple maze for the next level
-function generateMaze() {
-    const mazePattern = [
-        "11111111111111111111",
-        "10000000001100000001",
-        "10111111101101111101",
-        "10100000100000000101",
-        "10101111101111110101",
-        "10100000000000100101",
-        "10111110111110111101",
-        "10000000100010000001",
-        "10111111111111111101",
-        "10000000000000000001",
-        "11111111111111111111",
-    ];
-
-    maze = [];
-    mazePattern.forEach((row, rowIndex) => {
-        row.split('').forEach((cell, colIndex) => {
-            if (cell === '1') {
-                maze.push({
-                    x: colIndex * tileSize,
-                    y: rowIndex * tileSize,
-                    width: tileSize,
-                    height: tileSize
-                });
-            }
-        });
-    });
-}
-
-// Draw the maze on the canvas
-function drawMaze() {
-    ctx.fillStyle = "black";
-    maze.forEach(wall => {
-        ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
     });
 }
 
