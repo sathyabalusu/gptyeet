@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Up</title>
+    <title>Pac-Man Game</title>
     <style>
         body {
             font-family: comic sans, sans-serif;
@@ -80,14 +80,14 @@ const maze = [
     [1, 0, 1, 0, 2, 0, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 2, 1],
     [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 0, 1],
     [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 2, 1],
-    [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1],
+    [1, 2, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1],
     [1, 0, 2, 0, 2, 1, 2, 1, 2, 0, 2, 0, 2, 1, 1, 0, 1, 0, 2, 1],
     [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
     [1, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 1, 4, 0, 2, 0, 2, 1],
     [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 0, 1],
     [1, 4, 1, 2, 0, 2, 0, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0, 0, 4, 0, 1, 0, 1, 1, 0, 1],
-    [1, 0, 2, 0, 0, 0, 2, 0, 1, 1, 1, 1, 2, 1, 0, 2, 1, 0, 2, 0],
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 4, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 2, 0, 1, 0, 2, 0, 1, 2, 1, 1, 2, 1, 0, 2, 1, 0, 2, 0],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3]
 ];
 
@@ -99,12 +99,19 @@ let pacMan = {
     dy: 0,
     size: tileSize,
 };
+ let pacManImage = new Image();
+    pacManImage.src = "https://www.shutterstock.com/image-vector/pixel-almond-nut-icon-vector-260nw-2415989421.jpg";
+
+function drawPacMan() {ctx.drawImage(pacManImage, pacMan.x - pacMan.size / 2, pacMan.y - pacMan.size / 2, pacMan.size, pacMan.size);
+    }
 
 // Define ghosts
 let ghosts = [
     { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize },
     { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize }
 ];
+let ghostImage = new Image();
+ghostImage.src = "https://png.pngtree.com/png-clipart/20240305/original/pngtree-illustration-of-a-cartoon-bug-png-image_14513976.png";
 
 // Draw the maze with walls, dots, and exit
 function drawMaze() {
