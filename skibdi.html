@@ -1,43 +1,259 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>SKkibdi</title>
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Permanent+Marker">
-	<style type="text/css">
-		body {
-			background-color: black;
-		}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        h1 {
+            font-size: 50px;
+            margin-top: 20px;
+        }
 
-		#pacman {
-			height: 470px;
-			width: 382px;
-			border-radius: 5px;
-			margin: 20px auto;
-		}
+        canvas {
+            border: 2px solid #fff;
+            background-color: #111;
+        }
 
-		#shim {
-			font-family: 'Permanent Marker', cursive;
-			position: absolute;
-			visibility: hidden
-		}
+        #playButton {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #f1c40f;
+            color: black;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
 
-		h1 {
-			font-family: 'Permanent Marker', cursive;
-			text-align: center;
-			color: yellow;
-		}
+        #playButton:hover {
+            background-color: #f39c12;
+        }
+        
+        #homePage {
+            display: block;
+            margin-top: 100px;
+        }
 
-		body {
-			width: 342px;
-			margin: 0px auto;
-			font-family: sans-serif;
-		}
-
-		p {
-		
-			color: #0000FF;
-		}
-	</style>
+        #gamePage {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+
+<!-- Home Page -->
+<div id="homePage">
+    <h1>Welcome to Pac-Man</h1>
+    <button id="playButton" onclick="startGame()">Play</button>
+</div>
+
+<!-- Game Page -->
+<div id="gamePage">
+    <h1>Pac-Man Game</h1>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+</div>
+
+<script>
+// Define constants for the game
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const tileSize = 30;
+const cols = 20;
+const rows = 20;
+const speed = 3; // Pac-Man speed
+
+// Define maze layout (1: wall, 0: path, 2: dot, 3: exit, 4: ghost)
+const maze = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1],
+    [1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+];
+
+// Define Pac-Man's attributes
+let pacMan = {
+    x: tileSize * 1.5,
+    y: tileSize * 1.5,
+    dx: speed,
+    dy: 0,
+    size: tileSize / 2
+};
+
+// Define ghost attributes
+let ghosts = [
+    { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize / 2 },
+    { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize / 2 }
+];
+
+// Draw the maze with walls, dots, and exit
+function drawMaze() {
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            if (maze[row][col] === 1) {
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize); // Wall
+            } else if (maze[row][col] === 2) {
+                ctx.beginPath();
+                ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); // Dot
+                ctx.fillStyle = 'yellow';
+                ctx.fill();
+                ctx.closePath();
+            } else if (maze[row][col] === 3) {
+                ctx.fillStyle = 'green'; // Exit
+                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+            }
+        }
+    }
+}
+
+// Draw Pac-Man
+function drawPacMan() {
+    ctx.beginPath();
+    ctx.arc(pacMan.x, pacMan.y, pacMan.size, 0.2 * Math.PI, 1.8 * Math.PI);
+    ctx.lineTo(pacMan.x, pacMan.y);
+    ctx.fillStyle = 'yellow';
+    ctx.fill();
+    ctx.closePath();
+}
+
+// Draw Ghosts
+function drawGhosts() {
+    ghosts.forEach(ghost => {
+        ctx.beginPath();
+        ctx.arc(ghost.x, ghost.y, ghost.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        ctx.closePath();
+    });
+}
+
+// Update Pac-Man's position and handle collisions
+function updatePacMan() {
+    pacMan.x += pacMan.dx;
+    pacMan.y += pacMan.dy;
+
+    const xPos = Math.floor(pacMan.x / tileSize);
+    const yPos = Math.floor(pacMan.y / tileSize);
+
+    // Handle collisions with walls
+    if (maze[yPos][xPos] === 1) {
+        pacMan.x -= pacMan.dx;
+        pacMan.y -= pacMan.dy;
+    }
+
+    // Handle eating dots
+    if (maze[yPos][xPos] === 2) {
+        maze[yPos][xPos] = 0; // Remove the dot
+    }
+
+    // Handle reaching the exit
+    if (maze[yPos][xPos] === 3) {
+        alert('You Win! Pac-Man reached the exit.');
+        resetGame();
+    }
+
+    // Handle collision with ghosts (Game Over)
+    ghosts.forEach(ghost => {
+        const distance = Math.hypot(pacMan.x - ghost.x, pacMan.y - ghost.y);
+        if (distance < pacMan.size + ghost.size) {
+            alert('Game Over! Pac-Man was caught by a ghost.');
+            resetGame();
+        }
+    });
+}
+
+// Update ghosts' positions
+function updateGhosts() {
+    ghosts.forEach(ghost => {
+        ghost.x += ghost.dx * speed;
+        ghost.y += ghost.dy * speed;
+
+        const ghostXPos = Math.floor(ghost.x / tileSize);
+        const ghostYPos = Math.floor(ghost.y / tileSize);
+
+        if (maze[ghostYPos][ghostXPos] === 1) {
+            ghost.dx = -ghost.dx;
+            ghost.dy = -ghost.dy;
+        }
+    });
+}
+
+// Reset the game
+function resetGame() {
+    pacMan.x = tileSize * 1.5;
+    pacMan.y = tileSize * 1.5;
+    pacMan.dx = speed;
+    pacMan.dy = 0;
+
+    ghosts[0].x = tileSize * 5;
+    ghosts[0].y = tileSize * 5;
+    ghosts[0].dx = 1;
+    ghosts[0].dy = 0;
+
+    ghosts[1].x = tileSize * 14;
+    ghosts[1].y = tileSize * 5;
+    ghosts[1].dx = -1;
+    ghosts[1].dy = 0;
+}
+
+// Game loop
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMaze();
+    drawPacMan();
+    drawGhosts();
+    updatePacMan();
+    updateGhosts();
+    requestAnimationFrame(gameLoop);
+}
+
+// Handle keyboard input for Pac-Man's movement
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowUp') {
+        pacMan.dy = -speed;
+        pacMan.dx = 0;
+    } else if (e.key === 'ArrowDown') {
+        pacMan.dy = speed;
+        pacMan.dx = 0;
+    } else if (e.key === 'ArrowLeft') {
+        pacMan.dx = -speed;
+        pacMan.dy = 0;
+    } else if (e.key === 'ArrowRight') {
+        pacMan.dx = speed;
+        pacMan.dy = 0;
+    }
+});
+
+// Start the game by switching to the game page
+function startGame() {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    gameLoop();
+}
+</script>
+
+</body>
+</html>
+
 	
