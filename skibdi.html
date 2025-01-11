@@ -62,7 +62,7 @@
 <!-- Game Page -->
 <div id="gamePage">
     <h1>Plant up!</h1>
-    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <canvas id="gameCanvas" width="600" height="470"></canvas>
 </div>
 
 <script>
@@ -95,8 +95,8 @@ const maze = [
 
 // Define Pac-Man's attributes
 let pacMan = {
-    x: tileSize * 1.5,
-    y: tileSize * 1.5,
+    x: tileSize * 15,
+    y: tileSize * 15,
     dx: speed,
     dy: 0,
     size: tileSize,
@@ -104,8 +104,8 @@ let pacMan = {
 
 // Define ghosts
 let ghosts = [
-    { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize },
-    { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize }
+    { x: tileSize * 15, y: tileSize * 15, dx: 1, dy: 0, size: tileSize },
+    { x: tileSize * 15, y: tileSize * 15, dx: -1, dy: 0, size: tileSize }
 ];
 
 // Draw the maze with walls, dots, and exit
