@@ -21,6 +21,8 @@
 
         canvas {
             border: 2px solid #fff; 
+            background: url('https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp') no-repeat center center;
+            background-size: cover;
         }
 
         #playButton {
@@ -46,6 +48,11 @@
             display: none;
             position: relative;
         }
+
+        #nextLevelPage {
+            display: none;
+            margin-top: 100px;
+        }
     </style>
 </head>
 <body>
@@ -62,12 +69,26 @@
     <canvas id="gameCanvas" class="canvas-background" width="600" height="470"></canvas>
 </div>
 
+<!-- Next Level Page -->
+<div id="nextLevelPage">
+    <h1>Level Complete!</h1>
+    <p>Congratulations! Get ready for the next level.</p>
+    <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
+</div>
+
 <script>
 // Function to start the game
 function startGame() {
     document.getElementById("homePage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
     initGame();
+}
+
+// Function to start the next level
+function startNextLevel() {
+    document.getElementById("nextLevelPage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    resetGame();
 }
 
 // Define constants for the game
@@ -152,6 +173,10 @@ function checkForCollisions() {
             Math.abs(pacmanY - point.y) < tileSize / 2) {
             collectedPoints.push(point);
             drawPoints();
+            if (collectedPoints.length === points.length) {
+                document.getElementById("gamePage").style.display = "none";
+                document.getElementById("nextLevelPage").style.display = "block";
+            }
         }
     });
 }
