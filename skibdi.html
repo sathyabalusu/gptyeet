@@ -25,11 +25,9 @@
     <canvas id="gameCanvas" width="600" height="600"></canvas>
     
     <script>
-        // Get the canvas and context
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        // Game settings
         const tileSize = 30;
         const cols = 20;
         const rows = 20;
@@ -63,7 +61,7 @@
             size: tileSize / 2,
         };
 
-        // Function to draw the maze (walls, paths, dots, and exit)
+        // Draw the maze with walls, paths, dots, and the exit
         function drawMaze() {
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
@@ -84,7 +82,7 @@
             }
         }
 
-        // Function to draw Pac-Man
+        // Draw Pac-Man on the canvas
         function drawPacMan() {
             ctx.beginPath();
             ctx.arc(pacMan.x, pacMan.y, pacMan.size, 0.2 * Math.PI, 1.8 * Math.PI); // Partial circle
@@ -94,35 +92,32 @@
             ctx.closePath();
         }
 
-        // Function to update Pac-Man's position and check if it eats a dot
+        // Update Pac-Man's position and check if it eats a dot or reaches the exit
         function updatePacMan() {
-            // Move Pac-Man
             pacMan.x += pacMan.dx;
             pacMan.y += pacMan.dy;
 
-            // Handle wall collisions: check if Pac-Man goes outside bounds or hits a wall
-            if (pacMan.x - pacMan.size < 0 || pacMan.x + pacMan.size > canvas.width || maze[Math.floor(pacMan.y / tileSize)][Math.floor(pacMan.x / tileSize)] === 1) {
-                pacMan.x -= pacMan.dx; // Undo horizontal movement
-            }
-            if (pacMan.y - pacMan.size < 0 || pacMan.y + pacMan.size > canvas.height || maze[Math.floor(pacMan.y / tileSize)][Math.floor(pacMan.x / tileSize)] === 1) {
-                pacMan.y -= pacMan.dy; // Undo vertical movement
-            }
-
-            // Eat dots (remove dots from maze when Pac-Man eats them)
+            // Check if Pac-Man hits a wall
             const xPos = Math.floor(pacMan.x / tileSize);
             const yPos = Math.floor(pacMan.y / tileSize);
-            if (maze[yPos][xPos] === 2) {
-                maze[yPos][xPos] = 0; // Remove dot from maze
+            if (maze[yPos][xPos] === 1) {
+                pacMan.x -= pacMan.dx;
+                pacMan.y -= pacMan.dy;
             }
 
-            // Check if Pac-Man reaches the exit (green block)
+            // Eat dots (remove them from the maze)
+            if (maze[yPos][xPos] === 2) {
+                maze[yPos][xPos] = 0; // Remove the dot
+            }
+
+            // Check if Pac-Man reached the exit
             if (maze[yPos][xPos] === 3) {
                 alert("You Win! Pac-Man reached the exit.");
                 resetGame();
             }
         }
 
-        // Function to handle user input for Pac-Man movement
+        // Handle Pac-Man movement based on arrow key input
         document.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowUp') {
                 pacMan.dy = -speed;
@@ -139,22 +134,21 @@
             }
         });
 
-        // Function to reset the game
+        // Reset the game after Pac-Man reaches the exit
         function resetGame() {
-            // Reset Pac-Man position
             pacMan.x = tileSize * 1.5;
             pacMan.y = tileSize * 1.5;
             pacMan.dx = speed;
             pacMan.dy = 0;
         }
 
-        // Game loop function
+        // Game loop
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            drawMaze();  // Draw the maze walls, dots, and exit
+            drawMaze();  // Draw the maze with walls, dots, and exit
             drawPacMan(); // Draw Pac-Man
-            updatePacMan(); // Update Pac-Man position and check for dots
-            requestAnimationFrame(gameLoop); // Repeat the game loop
+            updatePacMan(); // Update Pac-Man's position and check for interactions
+            requestAnimationFrame(gameLoop); // Keep the game loop running
         }
 
         // Start the game loop
@@ -162,3 +156,4 @@
     </script>
 </body>
 </html>
+
