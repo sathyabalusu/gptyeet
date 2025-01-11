@@ -1,164 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pac-Man Game</title>
-    <style>
-        body {
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: black;
-        }
-        canvas {
-            border: 2px solid #fff;
-            background-color: #111;
-        }
-        h1 {
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pac-Plant Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #111;
+    }
+
+    canvas {
+      border: 2px solid white;
+    }
+
+    #pacman {
+      width: 30px;
+      height: 30px;
+      background: url('https://www.iconfinder.com/icons/3057795/download/png/128') no-repeat center;
+      background-size: cover;
+      position: absolute;
+    }
+  </style>
 </head>
 <body>
-    <h1>Pac-Man Game</h1>
-    <canvas id="gameCanvas" width="600" height="600"></canvas>
-    
-    <script>
-        // Get the canvas and context
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
+  <canvas id="pacman" width="400" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById('pacman');
+    const ctx = canvas.getContext('2d');
 
-        // Game settings
-        const tileSize = 30;
-        const cols = 20;
-        const rows = 20;
-        const speed = 5; // Pac-Man speed
+    const maze = [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1, 1, 0, 1],
+      [1, 0, 1, 1, 1, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+      [1, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ];
 
-        // Maze layout (1 is wall, 0 is path, 2 is dot, 3 is exit)
-        const maze = [
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1],
-            [1,0,1,0,0,0,0,1,1,1,1,1,0,1,1,1,1,0,0,1],
-            [1,0,1,0,1,1,0,1,0,0,1,1,0,0,0,0,1,1,0,1],
-            [1,0,1,0,0,0,0,1,0,0,1,0,0,1,1,0,1,0,0,1],
-            [1,0,1,1,1,1,0,1,0,1,1,1,0,1,1,0,1,0,0,1],
-            [1,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,1,0,0,1],
-            [1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
-            [1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,0,0,0,1],
-            [1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,0,1],
-            [1,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,1],
-            [1,0,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1,0,0,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-        ];
+    const pacPlant = {
+      x: 30,
+      y: 30,
+      width: 30,
+      height: 30,
+      speed: 5,
+    };
 
-        // Pac-Man initial position and movement direction
-        let pacMan = {
-            x: tileSize * 1.5,
-            y: tileSize * 1.5,
-            dx: speed,
-            dy: 0,
-            size: tileSize / 2,
-        };
-
-        // Function to draw the maze (walls, paths, dots, and exit)
-        function drawMaze() {
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    if (maze[row][col] === 1) {
-                        ctx.fillStyle = 'blue'; // Wall color
-                        ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
-                    } else if (maze[row][col] === 2) {
-                        ctx.beginPath();
-                        ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); // Draw dot
-                        ctx.fillStyle = 'yellow';
-                        ctx.fill();
-                        ctx.closePath();
-                    } else if (maze[row][col] === 3) {
-                        ctx.fillStyle = 'green'; // Exit color
-                        ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
-                    }
-                }
-            }
+    function drawMaze() {
+      ctx.fillStyle = 'blue';
+      for (let row = 0; row < maze.length; row++) {
+        for (let col = 0; col < maze[row].length; col++) {
+          if (maze[row][col] === 1) {
+            ctx.fillRect(col * 40, row * 40, 40, 40);
+          }
         }
+      }
+    }
 
-        // Function to draw Pac-Man
-        function drawPacMan() {
-            ctx.beginPath();
-            ctx.arc(pacMan.x, pacMan.y, pacMan.size, 0.2 * Math.PI, 1.8 * Math.PI); // Partial circle
-            ctx.lineTo(pacMan.x, pacMan.y);
-            ctx.fillStyle = "yellow";
-            ctx.fill();
-            ctx.closePath();
-        }
+    function drawPacPlant() {
+      ctx.clearRect(pacPlant.x, pacPlant.y, pacPlant.width, pacPlant.height);
+      const plantImage = new Image();
+      plantImage.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Plant_icon_1.svg'; // plant icon
+      plantImage.onload = () => {
+        ctx.drawImage(plantImage, pacPlant.x, pacPlant.y, pacPlant.width, pacPlant.height);
+      };
+    }
 
-        // Function to update Pac-Man's position and check if it eats a dot
-        function updatePacMan() {
-            // Move Pac-Man
-            pacMan.x += pacMan.dx;
-            pacMan.y += pacMan.dy;
+    function movePacPlant() {
+      if (pacPlant.direction === 'right') pacPlant.x += pacPlant.speed;
+      if (pacPlant.direction === 'left') pacPlant.x -= pacPlant.speed;
+      if (pacPlant.direction === 'up') pacPlant.y -= pacPlant.speed;
+      if (pacPlant.direction === 'down') pacPlant.y += pacPlant.speed;
+    }
 
-            // Handle wall collisions: check if Pac-Man goes outside bounds or hits a wall
-            if (pacMan.x - pacMan.size < 0 || pacMan.x + pacMan.size > canvas.width || maze[Math.floor(pacMan.y / tileSize)][Math.floor(pacMan.x / tileSize)] === 1) {
-                pacMan.x -= pacMan.dx; // Undo horizontal movement
-            }
-            if (pacMan.y - pacMan.size < 0 || pacMan.y + pacMan.size > canvas.height || maze[Math.floor(pacMan.y / tileSize)][Math.floor(pacMan.x / tileSize)] === 1) {
-                pacMan.y -= pacMan.dy; // Undo vertical movement
-            }
+    function detectCollision() {
+      const row = Math.floor(pacPlant.y / 40);
+      const col = Math.floor(pacPlant.x / 40);
+      if (maze[row] && maze[row][col] === 1) {
+        pacPlant.x -= pacPlant.speed;
+        pacPlant.y -= pacPlant.speed;
+      }
+    }
 
-            // Eat dots (remove dots from maze when Pac-Man eats them)
-            const xPos = Math.floor(pacMan.x / tileSize);
-            const yPos = Math.floor(pacMan.y / tileSize);
-            if (maze[yPos][xPos] === 2) {
-                maze[yPos][xPos] = 0; // Remove dot from maze
-            }
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawMaze();
+      movePacPlant();
+      detectCollision();
+      drawPacPlant();
+      requestAnimationFrame(gameLoop);
+    }
 
-            // Check if Pac-Man reaches the exit (green block)
-            if (maze[yPos][xPos] === 3) {
-                alert("You Win! Pac-Man reached the exit.");
-                resetGame();
-            }
-        }
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') pacPlant.direction = 'right';
+      if (e.key === 'ArrowLeft') pacPlant.direction = 'left';
+      if (e.key === 'ArrowUp') pacPlant.direction = 'up';
+      if (e.key === 'ArrowDown') pacPlant.direction = 'down';
+    });
 
-        // Function to handle user input for Pac-Man movement
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'ArrowUp') {
-                pacMan.dy = -speed;
-                pacMan.dx = 0;
-            } else if (e.key === 'ArrowDown') {
-                pacMan.dy = speed;
-                pacMan.dx = 0;
-            } else if (e.key === 'ArrowLeft') {
-                pacMan.dx = -speed;
-                pacMan.dy = 0;
-            } else if (e.key === 'ArrowRight') {
-                pacMan.dx = speed;
-                pacMan.dy = 0;
-            }
-        });
-
-        // Function to reset the game
-        function resetGame() {
-            // Reset Pac-Man position
-            pacMan.x = tileSize * 1.5;
-            pacMan.y = tileSize * 1.5;
-            pacMan.dx = speed;
-            pacMan.dy = 0;
-        }
-
-        // Game loop function
-        function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            drawMaze();  // Draw the maze walls, dots, and exit
-            drawPacMan(); // Draw Pac-Man
-            updatePacMan(); // Update Pac-Man position and check for dots
-            requestAnimationFrame(gameLoop); // Repeat the game loop
-        }
-
-        // Start the game loop
-        gameLoop();
-    </script>
+    gameLoop();
+  </script>
 </body>
 </html>
+
