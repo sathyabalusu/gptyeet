@@ -68,9 +68,14 @@
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
                     if (maze[row][col] === 1) {
-                        ctx.fillStyle = 'blue';
+                        ctx.fillStyle = 'blue'; // Wall color
                         ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
                     }
+                    // Add a background color for empty paths if needed
+                    // else {
+                    //     ctx.fillStyle = 'black';
+                    //     ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                    // }
                 }
             }
         }
