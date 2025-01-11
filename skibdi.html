@@ -14,8 +14,10 @@
             padding: 0;
         }
 
-        <p style="font-family: 'Merriweather, sans-serif; font-size: 20px;> This game shows the journey of a seed that's soon going to blossom into a beautiful flower. But people nowadays use pesticides for everything when it's not needed; just for the sake of making them look better, healthier? Which is ironic as they are not actually healthy for the plant. So this is basically the natural  journey of the seed, to show you that something so unnatural is not needed for a completely natural process.
-        <\p>
+        h1 {
+            font-size: 50px;
+            margin-top: 20px;
+        }
 
         canvas {
             border: 2px solid #fff; 
@@ -57,7 +59,7 @@
 
 <!-- Home Page -->
 <div id="homePage">
-    <h1>Plant up: </h1>
+    <h1>Plant up: Click to start playing</h1>
     <button id="playButton" onclick="startGame()">Play</button>
 </div>
 
@@ -70,7 +72,7 @@
 <!-- Next Level Page -->
 <div id="nextLevelPage">
     <h1>Level Complete!</h1>
-    <p>See, now the seed grew into a sapling!!! All with just some water and sunlight, and it's growing! Time to level up!</p>
+    <p>Congratulations! Get ready for the next level.</p>
     <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
 </div>
 
@@ -86,7 +88,11 @@ function startGame() {
 function startNextLevel() {
     document.getElementById("nextLevelPage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
-    initGameWithMaze();
+    if (currentLevel === 1) {
+        initLevel2();
+    } else if (currentLevel === 2) {
+        initLevel3();
+    }
 }
 
 // Define constants for the game
@@ -108,51 +114,17 @@ const initialPoints = [
     { x: 300, y: 300 }
 ];
 
-const mazePoints = [
-    { x: 60, y: 60 },
-    { x: 540, y: 60 },
-    { x: 60, y: 400 },
-    { x: 540, y: 400 },
-    { x: 200, y: 250 },
-    { x: 400, y: 250 }
-];
-
 let collectedPoints = [];
-let maze = [];
-let level = 1;
-let mazeWallImage = new Image();
-mazeWallImage.src = 'https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp'; // Replace with the actual path to your soil image
+let currentLevel = 1;
 
 // Initialize the game
 function initGame() {
-    level = 1;
     points = initialPoints;
-    document.addEventListener('keydown', movePacman);
-    canvas.style.background = 'url("https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp") no-repeat center center'; // Replace with the actual path to your soil image
-    canvas.style.backgroundSize = 'cover';
-    seedImage.onload = drawPacman;
-    drawPoints();
-}
-
-// Initialize the game with a maze
-function initGameWithMaze() {
-    level = 2;
-    points = mazePoints;
-    seedImage.src = 'https://new-image-url.com/new-pacman.png'; // Replace with the actual path to your new seed image
-    document.addEventListener('keydown', movePacman);
-    canvas.style.background = 'url("https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp") no-repeat center center'; // Replace with the actual path to your soil image
-    canvas.style.backgroundSize = 'cover';
-    generateMaze();
-    drawMaze();
-    drawPoints();
-}
-
-// Reset the game for the next level
-function resetGame() {
+    collectedPoints = [];
     pacmanX = 180;
     pacmanY = 180;
-    collectedPoints = [];
-    drawPacman();
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
     drawPoints();
 }
 
@@ -172,7 +144,6 @@ function drawPoints() {
 // Draw Pac-Man as a seed
 function drawPacman() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (level === 2) drawMaze(); // Draw maze if level 2
     ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
     drawPoints();
     checkForCollisions();
@@ -197,19 +168,9 @@ function movePacman(event) {
             nextX += step;
             break;
     }
-    if (level === 1 || !isWall(nextX, nextY)) {
-        pacmanX = nextX;
-        pacmanY = nextY;
-    }
+    pacmanX = nextX;
+    pacmanY = nextY;
     drawPacman();
-}
-
-// Check if the position is a wall
-function isWall(x, y) {
-    return maze.some(wall => 
-        x >= wall.x && x <= wall.x + wall.width &&
-        y >= wall.y && y <= wall.y + wall.height
-    );
 }
 
 // Check for collisions with points
@@ -223,48 +184,66 @@ function checkForCollisions() {
             if (collectedPoints.length === points.length) {
                 document.getElementById("gamePage").style.display = "none";
                 document.getElementById("nextLevelPage").style.display = "block";
+                currentLevel++;
             }
         }
     });
 }
 
-// Generate a simple maze for the next level
-function generateMaze() {
-    const mazePattern = [
-        "11111111111111111111",
-        "10000000001100000001",
-        "10111111101101111101",
-        "10100000100000000101",
-        "10101111101111110101",
-        "10100000000000100101",
-        "10111110111110111101",
-        "10000000100010000001",
-        "10111111111111111101",
-        "10000000000000000001",
-        "11111111111111111111",
+// Initialize Level 1
+function initLevel1() {
+    points = [
+        { x: 100, y: 100 },
+        { x: 200, y: 200 },
+        { x: 300, y: 300 },
+        { x: 50, y: 50 },
+        { x: 550, y: 50 },
+        { x: 50, y: 420 }
     ];
-
-    maze = [];
-    mazePattern.forEach((row, rowIndex) => {
-        row.split('').forEach((cell, colIndex) => {
-            if (cell === '1') { // Representing the walls now as 1
-                maze.push({
-                    x: colIndex * tileSize,
-                    y: rowIndex * tileSize,
-                    width: tileSize,
-                    height: tileSize
-                });
-            }
-        });
-    });
+    collectedPoints = [];
+    pacmanX = 30;
+    pacmanY = 30;
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
+    drawPoints();
 }
 
-// Draw the maze on the canvas
-function drawMaze() {
-    ctx.fillStyle = "#6f8b66"; // Sage green background
-    maze.forEach(wall => {
-        ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
-    });
+// Initialize Level 2
+function initLevel2() {
+    points = [
+        { x: 100, y: 100 },
+        { x: 200, y: 200 },
+        { x: 300, y: 300 }
+    ];
+    collectedPoints = [];
+    pacmanX = 30;
+    pacmanY = 30;
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
+    drawPoints();
+}
+
+// Initialize Level 3
+function initLevel3() {
+    points = [
+        { x: 50, y: 50 },
+        { x: 550, y: 50 },
+        { x: 50, y: 420 },
+        { x: 550, y: 420 },
+        { x: 300, y: 200 },
+        { x: 300, y: 350 },
+        { x: 450, y: 200 },
+        { x: 100, y: 350 },
+        { x: 200, y: 150 },
+        { x: 400, y: 300 },
+        { x: 450, y: 420 }
+    ];
+    collectedPoints = [];
+    pacmanX = 30;
+    pacmanY = 30;
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
+    drawPoints();
 }
 
 </script>
