@@ -53,6 +53,11 @@
             display: none;
             margin-top: 100px;
         }
+
+        #nextLevelPage2 {
+            display: none;
+            margin-top: 100px;
+        }
     </style>
 </head>
 <body>
@@ -60,7 +65,7 @@
 <!-- Home Page -->
 <div id="homePage">
     <h1>Plant up: Click to start playing</h1>
-    <p>This game shows the journey of a seed that's soon going to blossom into a beautiful flower. But people nowadays use pesticides for everything when it's not needed; just for the sake of making them look better, healthier? Which is ironic as they are not actually healthy for the plant. So this is basically the natural  journey of the seed, to show you that something so unnatural is not needed for a completely natural process.</p>
+    <p>This game shows the journey of a seed that's soon going to blossom into a beautiful flower. But people nowadays use pesticides for everything when it's not needed; just for the sake of making them look better, healthier? Which is ironic as they are not actually healthy for the plant. So this is basically the natural journey of the seed, to show you that something so unnatural is not needed for a completely natural process.</p>
     <button id="playButton" onclick="startGame()">Play</button>
 </div>
 
@@ -77,9 +82,17 @@
     <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
 </div>
 
+<!-- Next Level Page 2 -->
+<div id="nextLevelPage2">
+    <h1>Level Complete!</h1>
+    <p>See, now the seed grew into a sapling!!! All with just some water and sunlight, and it's growing! Time to level up! </p>
+    <button id="nextLevelButton2" onclick="startNextLevel()">Next Level</button>
+</div>
+
 <script>
 let canvas, ctx;
-let pacmanX, pacmanY, seedImage, points, collectedPoints, currentLevel;
+let pacmanX, pacmanY, seedImage, points, collectedPoints;
+let currentLevel = 1; // Initialize currentLevel
 
 const tileSize = 40; // Seed size
 const initialPoints = [
@@ -97,13 +110,14 @@ function startGame() {
 
 // Function to start the next level
 function startNextLevel() {
-    document.getElementById("nextLevelPage").style.display = "none";
-    document.getElementById("gamePage").style.display = "block";
     if (currentLevel === 1) {
+        document.getElementById("nextLevelPage").style.display = "none";
         initLevel2();
     } else if (currentLevel === 2) {
+        document.getElementById("nextLevelPage2").style.display = "none";
         initLevel3();
     }
+    document.getElementById("gamePage").style.display = "block";
 }
 
 // Initialize the game
@@ -176,7 +190,11 @@ function checkForCollisions() {
             drawPoints();
             if (collectedPoints.length === points.length) {
                 document.getElementById("gamePage").style.display = "none";
-                document.getElementById("nextLevelPage").style.display = "block";
+                if (currentLevel === 1) {
+                    document.getElementById("nextLevelPage").style.display = "block";
+                } else if (currentLevel === 2) {
+                    document.getElementById("nextLevelPage2").style.display = "block";
+                }
                 currentLevel++;
             }
         }
@@ -204,9 +222,11 @@ function initLevel1() {
 // Initialize Level 2
 function initLevel2() {
     points = [
-        { x: 100, y: 100 },
         { x: 200, y: 200 },
-        { x: 300, y: 300 }
+        { x: 300, y: 300 },
+        { x: 50, y: 50 },
+        { x: 550, y: 50 },
+        { x: 50, y: 420 }
     ];
     collectedPoints = [];
     pacmanX = 30;
@@ -239,6 +259,5 @@ function initLevel3() {
     drawPoints();
 }
 </script>
-
 </body>
 </html>
