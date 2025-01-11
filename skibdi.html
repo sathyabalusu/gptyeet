@@ -22,6 +22,7 @@
         canvas {
             border: 2px solid #fff; 
             background: url('https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp') no-repeat center center; 
+            background-size: cover;
         }
 
         #playButton {
@@ -72,7 +73,7 @@
 <!-- Next Level Page -->
 <div id="nextLevelPage">
     <h1>Level Complete!</h1>
-    <p>Heres some informational sustainable practices you can learn about and do, before moving on to the next stage.</p>
+    <p>Here are some informational sustainable practices you can learn about and do, before moving on to the next stage.</p>
     <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
 </div>
 
@@ -88,14 +89,14 @@ function startGame() {
 function startNextLevel() {
     document.getElementById("nextLevelPage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
-    resetGame();
+    initGameWithMaze();
 }
 
 // Define constants for the game
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const tileSize = 30;
+const tileSize = 40; // Increased seed size
 const cols = 20;
 const rows = 15;
 const speed = 6; // Seed speed
@@ -110,11 +111,21 @@ const points = [
     { x: 300, y: 300 }
 ];
 let collectedPoints = [];
+let maze = [];
 
 // Initialize the game
 function initGame() {
     document.addEventListener('keydown', movePacman);
     seedImage.onload = drawPacman;
+    drawPoints();
+}
+
+// Initialize the game with a maze
+function initGameWithMaze() {
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
+    generateMaze();
+    drawMaze();
     drawPoints();
 }
 
@@ -143,8 +154,9 @@ function drawPoints() {
 // Draw Pac-Man as a seed
 function drawPacman() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(seedImage, pacmanX - tileSize / 3, pacmanY - tileSize / 3, tileSize, tileSize);
+    ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
     drawPoints();
+    drawMaze();
     checkForCollisions();
 }
 
@@ -181,6 +193,45 @@ function checkForCollisions() {
                 document.getElementById("nextLevelPage").style.display = "block";
             }
         }
+    });
+}
+
+// Generate a simple maze for the next level
+function generateMaze() {
+    const mazePattern = [
+        "11111111111111111111",
+        "10000000001100000001",
+        "10111111101101111101",
+        "10100000100000000101",
+        "10101111101111110101",
+        "10100000000000100101",
+        "10111110111110111101",
+        "10000000100010000001",
+        "10111111111111111101",
+        "10000000000000000001",
+        "11111111111111111111",
+    ];
+
+    maze = [];
+    mazePattern.forEach((row, rowIndex) => {
+        row.split('').forEach((cell, colIndex) => {
+            if (cell === '1') {
+                maze.push({
+                    x: colIndex * tileSize,
+                    y: rowIndex * tileSize,
+                    width: tileSize,
+                    height: tileSize
+                });
+            }
+        });
+    });
+}
+
+// Draw the maze on the canvas
+function drawMaze() {
+    ctx.fillStyle = "black";
+    maze.forEach(wall => {
+        ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
     });
 }
 
