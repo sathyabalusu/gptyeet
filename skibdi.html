@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>https://github.com/sathyabalusu/gptyeet/blob/main/skibdi.html
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plant Up</title>
@@ -21,8 +21,7 @@
 
         canvas {
             border: 2px solid #fff; 
-            background: url('https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp') no-repeat center center; /
-            background-size: cover;
+            background: url('https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp') no-repeat center center; 
         }
 
         #playButton {
@@ -47,7 +46,7 @@
         #gamePage {
             display: none;
             position: relative;
-            background-color: #6f8b66; 
+            background-color: #6f8b66; /* Sage green background */
         }
 
         #nextLevelPage {
@@ -85,6 +84,13 @@ function startGame() {
     initGame();
 }
 
+// Function to start the next level
+function startNextLevel() {
+    document.getElementById("nextLevelPage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    resetGame();
+}
+
 // Define constants for the game
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -98,16 +104,48 @@ let pacmanX = 180, pacmanY = 180;
 let seedImage = new Image();
 seedImage.src = 'https://img.freepik.com/premium-vector/pixel-art-illustration-coffee-bean-pixelated-coffee-bean-coffee-bean-pixelated-pixel-art_1038602-1029.jpg'; // Replace with the actual path to your seed image
 
+const points = [
+    { x: 100, y: 100 },
+    { x: 200, y: 200 },
+    { x: 300, y: 300 }
+];
+let collectedPoints = [];
+
 // Initialize the game
 function initGame() {
     document.addEventListener('keydown', movePacman);
     seedImage.onload = drawPacman;
+    drawPoints();
+}
+
+// Reset the game for the next level
+function resetGame() {
+    pacmanX = 180;
+    pacmanY = 180;
+    collectedPoints = [];
+    drawPacman();
+    drawPoints();
+}
+
+// Draw points on the canvas
+function drawPoints() {
+    ctx.fillStyle = "yellow";
+    points.forEach(point => {
+        if (!collectedPoints.includes(point)) {
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, tileSize / 4, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fill();
+        }
+    });
 }
 
 // Draw Pac-Man as a seed
 function drawPacman() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
+    drawPoints();
+    checkForCollisions();
 }
 
 // Move Pac-Man
@@ -128,6 +166,22 @@ function movePacman(event) {
             break;
     }
     drawPacman();
+}
+
+// Check for collisions with points
+function checkForCollisions() {
+    points.forEach(point => {
+        if (!collectedPoints.includes(point) && 
+            Math.abs(pacmanX - point.x) < tileSize / 2 && 
+            Math.abs(pacmanY - point.y) < tileSize / 2) {
+            collectedPoints.push(point);
+            drawPoints();
+            if (collectedPoints.length === points.length) {
+                document.getElementById("gamePage").style.display = "none";
+                document.getElementById("nextLevelPage").style.display = "block";
+            }
+        }
+    });
 }
 
 </script>
