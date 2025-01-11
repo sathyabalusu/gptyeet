@@ -1,57 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        button {
-            font-size: 20px;
-            padding: 10px 20px;
-            margin: 10px;
-        }
-        #result {
-            font-size: 20px;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pac-Man Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: black;
+    }
+
+    canvas {
+      border: 1px solid white;
+    }
+  </style>
 </head>
 <body>
+  <canvas id="pacman" width="400" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById('pacman');
+    const ctx = canvas.getContext('2d');
 
-    <h1>Rock, Paper, Scissors</h1>
-    <p>Choose your move:</p>
-    <button onclick="playGame('rock')">Rock</button>
-    <button onclick="playGame('paper')">Paper</button>
-    <button onclick="playGame('scissors')">Scissors</button>
+    const pacman = {
+      x: 50,
+      y: 50,
+      radius: 20,
+      speed: 5,
+      direction: 'right',
+    };
 
-    <div id="result"></div>
+    const food = {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: 10,
+    };
 
-    <script>
-        function playGame(playerChoice) {
-            const choices = ['rock', 'paper', 'scissors'];
-            const computerChoice = choices[Math.floor(Math.random() * 3)];
-            let resultMessage = '';
+    function drawPacman() {
+      ctx.beginPath();
+      ctx.arc(pacman.x, pacman.y, pacman.radius, 0.2 * Math.PI, 1.8 * Math.PI);
+      ctx.lineTo(pacman.x, pacman.y);
+      ctx.fillStyle = 'yellow';
+      ctx.fill();
+      ctx.closePath();
+    }
 
-            if (playerChoice === computerChoice) {
-                resultMessage = `It's a tie! Both chose ${playerChoice}.`;
-            } else if (
-                (playerChoice === 'rock' && computerChoice === 'scissors') ||
-                (playerChoice === 'paper' && computerChoice === 'rock') ||
-                (playerChoice === 'scissors' && computerChoice === 'paper')
-            ) {
-                resultMessage = `You win! ${playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1)} beats ${computerChoice}.`;
-            } else {
-                resultMessage = `You lose! ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)} beats ${playerChoice}.`;
-            }
+    function drawFood() {
+      ctx.beginPath();
+      ctx.arc(food.x, food.y, food.radius, 0, 2 * Math.PI);
+      ctx.fillStyle = 'red';
+      ctx.fill();
+      ctx.closePath();
+    }
 
-            document.getElementById('result').innerText = resultMessage;
-        }
-    </script>
+    function movePacman() {
+      if (pacman.direction === 'right') pacman.x += pacman.speed;
+      if (pacman.direction === 'left') pacman.x -= pacman.speed;
+      if (pacman.direction === 'up') pacman.y -= pacman.speed;
+      if (pacman.direction === 'down') pacman.y += pacman.speed;
+    }
+
+    function detectCollision() {
+      const dx = pacman.x - food.x;
+      const dy = pacman.y - food.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < pacman.radius + food.radius) {
+        food.x = Math.random() * canvas.width;
+        food.y = Math.random() * canvas.height;
+      }
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPacman();
+      drawFood();
+      movePacman();
+      detectCollision();
+      requestAnimationFrame(gameLoop);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') pacman.direction = 'right';
+      if (e.key === 'ArrowLeft') pacman.direction = 'left';
+      if (e.key === 'ArrowUp') pacman.direction = 'up';
+      if (e.key === 'ArrowDown') pacman.direction = 'down';
+    });
+
+    gameLoop();
+  </script>
+</body>
+</html>
+
 
 </body>
 </html>
