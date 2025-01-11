@@ -6,32 +6,77 @@
     <title>Pac-Man Game</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
             text-align: center;
             margin: 0;
             padding: 0;
-            background-color: black;
         }
+
+        #homePage {
+            display: block;
+            margin-top: 100px;
+        }
+
+        #gamePage {
+            display: none;
+        }
+
+        h1 {
+            font-size: 50px;
+            margin-top: 100px;
+        }
+
+        #playButton {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #f1c40f;
+            color: black;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #playButton:hover {
+            background-color: #f39c12;
+        }
+
         canvas {
             border: 2px solid #fff;
             background-color: #111;
         }
-        h1 {
-            color: white;
-        }
     </style>
 </head>
 <body>
-    <h1>Pac-Man Game</h1>
-    <canvas id="gameCanvas" width="600" height="600"></canvas>
-    
+    <!-- Home Page Section -->
+    <div id="homePage">
+        <h1>Welcome to Pac-Man Game</h1>
+        <button id="playButton" onclick="startGame()">Play</button>
+    </div>
+
+    <!-- Game Page Section -->
+    <div id="gamePage">
+        <h1>Pac-Man Game</h1>
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
+    </div>
+
     <script>
+        // Function to switch from home page to game
+        function startGame() {
+            document.getElementById("homePage").style.display = "none";
+            document.getElementById("gamePage").style.display = "block";
+            gameLoop(); // Start the game loop
+        }
+
+        // Game-related code
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
         const tileSize = 30;
         const cols = 20;
         const rows = 20;
-        const speed = 3; // Pac-Man speed
+        const speed = 3;
 
         // Maze layout (1 is wall, 0 is path, 2 is dot, 3 is exit)
         const maze = [
@@ -52,7 +97,6 @@
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
         ];
 
-        // Pac-Man initial position and movement direction
         let pacMan = {
             x: tileSize * 1.5,
             y: tileSize * 1.5,
@@ -61,43 +105,39 @@
             size: tileSize / 2,
         };
 
-        // Draw the maze with walls, paths, dots, and the exit
         function drawMaze() {
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
                     if (maze[row][col] === 1) {
-                        ctx.fillStyle = 'blue'; // Wall color
+                        ctx.fillStyle = 'blue';
                         ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
                     } else if (maze[row][col] === 2) {
                         ctx.beginPath();
-                        ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); // Draw dot
+                        ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2);
                         ctx.fillStyle = 'yellow';
                         ctx.fill();
                         ctx.closePath();
                     } else if (maze[row][col] === 3) {
-                        ctx.fillStyle = 'green'; // Exit color
+                        ctx.fillStyle = 'green';
                         ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
                     }
                 }
             }
         }
 
-        // Draw Pac-Man on the canvas
         function drawPacMan() {
             ctx.beginPath();
-            ctx.arc(pacMan.x, pacMan.y, pacMan.size, 0.2 * Math.PI, 1.8 * Math.PI); // Partial circle
+            ctx.arc(pacMan.x, pacMan.y, pacMan.size, 0.2 * Math.PI, 1.8 * Math.PI);
             ctx.lineTo(pacMan.x, pacMan.y);
             ctx.fillStyle = "yellow";
             ctx.fill();
             ctx.closePath();
         }
 
-        // Update Pac-Man's position and check if it eats a dot or reaches the exit
         function updatePacMan() {
             pacMan.x += pacMan.dx;
             pacMan.y += pacMan.dy;
 
-            // Check if Pac-Man hits a wall
             const xPos = Math.floor(pacMan.x / tileSize);
             const yPos = Math.floor(pacMan.y / tileSize);
             if (maze[yPos][xPos] === 1) {
@@ -105,19 +145,16 @@
                 pacMan.y -= pacMan.dy;
             }
 
-            // Eat dots (remove them from the maze)
             if (maze[yPos][xPos] === 2) {
-                maze[yPos][xPos] = 0; // Remove the dot
+                maze[yPos][xPos] = 0;
             }
 
-            // Check if Pac-Man reached the exit
             if (maze[yPos][xPos] === 3) {
                 alert("You Win! Pac-Man reached the exit.");
                 resetGame();
             }
         }
 
-        // Handle Pac-Man movement based on arrow key input
         document.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowUp') {
                 pacMan.dy = -speed;
@@ -134,7 +171,6 @@
             }
         });
 
-        // Reset the game after Pac-Man reaches the exit
         function resetGame() {
             pacMan.x = tileSize * 1.5;
             pacMan.y = tileSize * 1.5;
@@ -142,17 +178,13 @@
             pacMan.dy = 0;
         }
 
-        // Game loop
         function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            drawMaze();  // Draw the maze with walls, dots, and exit
-            drawPacMan(); // Draw Pac-Man
-            updatePacMan(); // Update Pac-Man's position and check for interactions
-            requestAnimationFrame(gameLoop); // Keep the game loop running
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawMaze();
+            drawPacMan();
+            updatePacMan();
+            requestAnimationFrame(gameLoop);
         }
-
-        // Start the game loop
-        gameLoop();
     </script>
 </body>
 </html>
