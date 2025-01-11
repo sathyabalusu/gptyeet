@@ -35,10 +35,10 @@
         const rows = 20;
         const speed = 5; // Pac-Man speed
 
-        // Maze layout (1 is wall, 0 is path)
+        // Maze layout (1 is wall, 0 is path, 2 is dot)
         const maze = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1],
             [1,0,1,0,0,0,0,1,1,1,1,1,0,1,1,1,1,0,0,1],
             [1,0,1,0,1,1,0,1,0,0,1,1,0,0,0,0,1,1,0,1],
@@ -63,13 +63,19 @@
             size: tileSize / 2,
         };
 
-        // Function to draw the maze (walls and paths)
+        // Function to draw the maze (walls, paths, and dots)
         function drawMaze() {
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
                     if (maze[row][col] === 1) {
                         ctx.fillStyle = 'blue'; // Wall color
                         ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                    } else if (maze[row][col] === 2) {
+                        ctx.beginPath();
+                        ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); // Draw dot
+                        ctx.fillStyle = 'yellow';
+                        ctx.fill();
+                        ctx.closePath();
                     }
                 }
             }
@@ -85,7 +91,7 @@
             ctx.closePath();
         }
 
-        // Function to update Pac-Man's position
+        // Function to update Pac-Man's position and eat dots
         function updatePacMan() {
             // Move Pac-Man
             pacMan.x += pacMan.dx;
@@ -97,6 +103,13 @@
             }
             if (pacMan.y - pacMan.size < 0 || pacMan.y + pacMan.size > canvas.height || maze[Math.floor(pacMan.y / tileSize)][Math.floor(pacMan.x / tileSize)] === 1) {
                 pacMan.y -= pacMan.dy; // Undo vertical movement
+            }
+
+            // Eat dots (remove dots from maze when Pac-Man eats them)
+            const xPos = Math.floor(pacMan.x / tileSize);
+            const yPos = Math.floor(pacMan.y / tileSize);
+            if (maze[yPos][xPos] === 2) {
+                maze[yPos][xPos] = 0; // Remove dot from maze
             }
         }
 
@@ -120,9 +133,9 @@
         // Game loop function
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            drawMaze();  // Draw the maze walls
+            drawMaze();  // Draw the maze walls and dots
             drawPacMan(); // Draw Pac-Man
-            updatePacMan(); // Update Pac-Man position
+            updatePacMan(); // Update Pac-Man position and eat dots
             requestAnimationFrame(gameLoop); // Repeat the game loop
         }
 
