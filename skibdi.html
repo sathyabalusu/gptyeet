@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pac-Man Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            color: white;
+            font-family: comic sans, sans-serif;
+            background-color: #782b1a;
+            color: green;
             text-align: center;
             margin: 0;
             padding: 0;
@@ -21,14 +21,13 @@
 
         canvas {
             border: 2px solid #fff;
-            background-image: #111;
-            background-image: url('https://attachments.office.net/owa/sathya_balusu%40oakridge.in/service.svc/s/GetAttachmentThumbnail?id=AAMkADE4M2Y1OWVmLWUzMDItNDZlYS05MTkzLTI1NDYyYTE3NmMzNwBGAAAAAAA6n8UeNtNnQpVG62neAs2sBwCkJD1n0M1zQrKHII9Ee5gTAAAAAAEMAACkJD1n0M1zQrKHII9Ee5gTAAB0i6l0AAABEgAQALpwLBOHactDt9JVD2mBptA%3D&thumbnailType=2&token=eyJhbGciOiJSUzI1NiIsImtpZCI6IkEzMDVCMkU1Q0ZERjFGQTFBODgyNTU2MzM3NDhCQkNBRTAxNUU5OTIiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJvd1d5NWNfZkg2R29nbFZqTjBpN3l1QVY2WkkifQ.eyJvcmlnaW4iOiJodHRwczovL291dGxvb2sub2ZmaWNlLmNvbSIsInVjIjoiYWI0YzIzN2U4YmZkNGUyMDg0ZjVhZWUwNzAyZWNjMmIiLCJzaWduaW5fc3RhdGUiOlsiaW5rbm93bm50d2siLCJrbXNpIl0sInZlciI6IkV4Y2hhbmdlLkNhbGxiYWNrLlYxIiwiYXBwY3R4c2VuZGVyIjoiT3dhRG93bmxvYWRAN2ZjOTcwN2ItOWQ4Zi00ZjZhLTg1NmItYWViODQ4ZmVmMTAzIiwiaXNzcmluZyI6IldXIiwiYXBwY3R4Ijoie1wibXNleGNocHJvdFwiOlwib3dhXCIsXCJwdWlkXCI6XCIxMTUzODAxMTI5NTg5MDc0NjI3XCIsXCJzY29wZVwiOlwiT3dhRG93bmxvYWRcIixcIm9pZFwiOlwiMWM4YTNiNTYtMGQ1Mi00YzcwLWI3MDYtMGJhMWIxOGUyMzE4XCIsXCJwcmltYXJ5c2lkXCI6XCJTLTEtNS0yMS0xNzcxMDc1NDYwLTY2MjkyODgxMC0zNDkyODI0MzYzLTMwNzI4MzI5XCJ9IiwibmJmIjoxNzM2NTc1ODA2LCJleHAiOjE3MzY1NzYxMDYsImlzcyI6IjAwMDAwMDAyLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMEA3ZmM5NzA3Yi05ZDhmLTRmNmEtODU2Yi1hZWI4NDhmZWYxMDMiLCJhdWQiOiIwMDAwMDAwMi0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXR0YWNobWVudHMub2ZmaWNlLm5ldEA3ZmM5NzA3Yi05ZDhmLTRmNmEtODU2Yi1hZWI4NDhmZWYxMDMiLCJoYXBwIjoib3dhIn0.QNfZdtTPSIKPv1cKLH9TCeGZpz_zZfNKi8VZBR4wZWYWymPAMr8_mkDpZUJNa0Soi18h0yC3IR23GZd3GXZ0xIE6aP_J3eOPJngVPXujvXt43CEm-6qlP0HK2fRt_Apn4PT5rtNXy7WqTbh1ASC2Iq-rD4HNc3OW6zwlIyH0pzoODnTreHayaLfLiE2YH__A_7kduZUym2uwtTH8LbQe5_N5n0-etBDo9msyQITs05ohSWK_L_ATGNEA4E2fZmRMnZiB_3Glb5WeGgti9Ce1zF1EHqYmcu42ROu5Ms8Z1WnjncwWwCgvIdgX_j8Ap3X5kHd1hvux5_uUNyy9LeuilA&X-OWA-CANARY=wTQ4TaNjjl8AAAAAAAAAAACxbKIGMt0YNkNY_Lp5Mlu_vWmJeIbxq_JyuQYhPeVWAOBwsSCQdOQ.&owa=outlook.office.com&scriptVer=20250103002.08&clientId=B60E0C7A7B0D4EDEAB0A6A265B522D45&animation=true';)
+            background-color: #111;
         }
 
         #playButton {
             padding: 15px 30px;
             font-size: 24px;
-            background-color: #f1c40f;
+            background-color: #50961a;
             color: black;
             border: none;
             cursor: pointer;
@@ -53,13 +52,13 @@
 
 <!-- Home Page -->
 <div id="homePage">
-    <h1>Welcome to Pac-Man</h1>
+    <h1>Plant up: CLick to start playing</h1>
     <button id="playButton" onclick="startGame()">Play</button>
 </div>
 
 <!-- Game Page -->
 <div id="gamePage">
-    <h1>Pac-Man Game</h1>
+    <h1>Plant up!</h1>
     <canvas id="gameCanvas" width="600" height="600"></canvas>
 </div>
 
@@ -75,48 +74,42 @@ const speed = 3; // Pac-Man speed
 
 // Define maze layout (1: wall, 0: path, 2: dot, 3: exit, 4: ghost)
 const maze = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 0, 2, 4, 0, 2, 0, 2, 0, 2, 1],
-    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 0, 1, 2, 0, 1],
-    [1, 2, 1, 2, 0, 2, 0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0, 2, 1],
-    [1, 0, 1, 2, 1, 1, 2, 1, 2, 0, 1, 1, 2, 0, 2, 0, 1, 1, 2, 1],
-    [1, 2, 1, 2, 0, 2, 0, 1, 2, 0, 1, 2, 0, 1, 1, 2, 1, 2, 0, 1],
-    [1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 2, 1, 1, 0, 1, 2, 0, 1],
-    [1, 0, 2, 0, 2, 1, 2, 1, 2, 0, 2, 2, 0, 1, 1, 2, 1, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 4, 1, 2, 1, 0, 1, 1, 1, 0, 1],
-    [1, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1, 2, 0, 2, 0, 2, 1],
-    [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 0, 0, 0, 1],
-    [1, 2, 1, 2, 0, 2, 0, 2, 0, 2, 1, 2, 0, 1, 1, 1, 1, 1, 2, 1],
-    [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 2, 0, 0, 1, 0, 0, 1, 1, 1],
-    [1, 2, 0, 2, 1, 0, 2, 4, 1, 2, 1, 1, 2, 2, 0,2, 2, 0, 2, 3],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3]
+    [3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 4, 2, 1],
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2, 0, 0, 1],
+    [1, 0, 1, 0, 2, 0, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 2, 1],
+    [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 0, 1],
+    [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 2, 1],
+    [1, 2, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1],
+    [1, 0, 2, 0, 2, 1, 2, 1, 2, 0, 2, 0, 2, 1, 1, 0, 1, 0, 2, 1],
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 1, 4, 0, 2, 0, 2, 1],
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 0, 1],
+    [1, 4, 1, 2, 0, 2, 0, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 2, 1],
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 4, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 2, 0, 1, 0, 2, 0, 1, 2, 1, 1, 2, 1, 0, 2, 1, 0, 2, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3]
 ];
+
 // Define Pac-Man's attributes
-let pacMan = {
-    x: tileSize * 1.5,
-    y: tileSize * 1.5,
-    dx: speed,
-    dy: 0,
-    size: tileSize / 2
-};
+let pacManImage = new Image();
+pacManImage.src = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fpixel-art-seed%3Fimage_type%3Dvector&psig=AOvVaw0rMnoLCW_AzHq6ZYBuYxJU&ust=1736665362503000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLi-6uGM7YoDFQAAAAAdAAAAABAE";  
 
 // Define ghosts
-let ghosts = [
-    { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize / 2 },
-    { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize / 2 }
-];
+let ghostImage = new Image();
+ghostImage.src = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Ffreepng%2Fillustration-of-a-cartoon-bug_14513976.html&psig=AOvVaw0ccEG3buGaJdsgntyg83jS&ust=1736667239915000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICzp-GT7YoDFQAAAAAdAAAAABAE";
 
 // Draw the maze with walls, dots, and exit
 function drawMaze() {
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             if (maze[row][col] === 1) {
-                ctx.fillStyle = 'blue';
+                ctx.fillStyle = 'green';
                 ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize); // Wall
             } else if (maze[row][col] === 2) {
                 ctx.beginPath();
                 ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); // Dot
-                ctx.fillStyle = 'yellow';
+                ctx.fillStyle = 'white';
                 ctx.fill();
                 ctx.closePath();
             } else if (maze[row][col] === 3) {
@@ -127,26 +120,6 @@ function drawMaze() {
     }
 }
 
-// Draw Pac-Man
-function drawPacMan() {
-    ctx.beginPath();
-    ctx.arc(pacMan.x, pacMan.y, pacMan.size, 0.2 * Math.PI, 1.8 * Math.PI);
-    ctx.lineTo(pacMan.x, pacMan.y);
-    ctx.fillStyle = 'yellow';
-    ctx.fill();
-    ctx.closePath();
-}
-
-// Draw Ghosts
-function drawGhosts() {
-    ghosts.forEach(ghost => {
-        ctx.beginPath();
-        ctx.arc(ghost.x, ghost.y, ghost.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        ctx.closePath();
-    });
-}
 
 // Update Pac-Man's position and handle collisions
 function updatePacMan() {
@@ -221,10 +194,10 @@ function resetGame() {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawMaze();
-    drawPacMan();
-    drawGhosts();
-    updatePacMan();
-    updateGhosts();
+    drawPacMan(https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fpixel-art-seed%3Fimage_type%3Dvector&psig=AOvVaw0rMnoLCW_AzHq6ZYBuYxJU&ust=1736665362503000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLi-6uGM7YoDFQAAAAAdAAAAABAE); 
+    drawGhosts(https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Ffreepng%2Fillustration-of-a-cartoon-bug_14513976.html&psig=AOvVaw0ccEG3buGaJdsgntyg83jS&ust=1736667239915000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICzp-GT7YoDFQAAAAAdAAAAABAE);
+    updatePacMan(https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Fso%2Fsapling-clipart&psig=AOvVaw0OjA2TNphDx_wrO4QxxNPu&ust=1736668032765000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOChw9uW7YoDFQAAAAAdAAAAABAI);
+    updateGhosts(https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.alamy.com%2Fstock-photo%2Fcartoon-bug.html&psig=AOvVaw0ccEG3buGaJdsgntyg83jS&ust=1736667239915000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICzp-GT7YoDFQAAAAAdAAAAABAJ);
     requestAnimationFrame(gameLoop);
 }
 
@@ -232,16 +205,16 @@ function gameLoop() {
 document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowUp') {
         pacMan.dy = -speed;
-        pacMan.dx = 0;
+        pacMan.dx = 25;
     } else if (e.key === 'ArrowDown') {
         pacMan.dy = speed;
-        pacMan.dx = 0;
+        pacMan.dx = 25;
     } else if (e.key === 'ArrowLeft') {
         pacMan.dx = -speed;
-        pacMan.dy = 0;
+        pacMan.dy = 25;
     } else if (e.key === 'ArrowRight') {
         pacMan.dx = speed;
-        pacMan.dy = 0;
+        pacMan.dy = 25;
     }
 });
 
@@ -255,4 +228,3 @@ function startGame() {
 
 </body>
 </html>
-
