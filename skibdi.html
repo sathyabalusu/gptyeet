@@ -1,98 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pac-Man Game</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: black;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Up</title>
+    <style>
+        body {
+            font-family: Merriweather, sans-serif;
+            background-color: #6f8b66;
+            color: #4b5747;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
 
-    canvas {
-      border: 1px solid white;
-    }
-  </style>
+        h1 {
+            font-size: 50px;
+            margin-top: 20px;
+        }
+
+        canvas {
+            border: 2px solid #fff;
+            background-color: #111;
+        }
+
+        #playButton {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #50961a;
+            color: black;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #playButton:hover {
+            background-color: #f39c12;
+        }
+        
+        #homePage {
+            display: block;
+            margin-top: 100px;
+        }
+
+        #gamePage {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="pacman" width="400" height="400"></canvas>
-  <script>
-    const canvas = document.getElementById('pacman');
-    const ctx = canvas.getContext('2d');
 
-    const pacman = {
-      x: 50,
-      y: 50,
-      radius: 20,
-      speed: 5,
-      direction: 'right',
-    };
+<!-- Home Page -->
+<div id="homePage">
+    <h1>Plant up: Click to start playing</h1>
+    <button id="playButton" onclick="startGame()">Play</button>
+</div>
 
-    const food = {
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: 10,
-    };
+<!-- Game Page -->
+<div id="gamePage">
+    <h1>Plant up!</h1>
+    <canvas id="gameCanvas" width="600" height="470"></canvas>
+</div>
 
-    function drawPacman() {
-      ctx.beginPath();
-      ctx.arc(pacman.x, pacman.y, pacman.radius, 0.2 * Math.PI, 1.8 * Math.PI);
-      ctx.lineTo(pacman.x, pacman.y);
-      ctx.fillStyle = 'yellow';
-      ctx.fill();
-      ctx.closePath();
-    }
+<script>
+// Define constants for the game
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-    function drawFood() {
-      ctx.beginPath();
-      ctx.arc(food.x, food.y, food.radius, 0, 2 * Math.PI);
-      ctx.fillStyle = 'red';
-      ctx.fill();
-      ctx.closePath();
-    }
+const tileSize = 30;
+const cols = 20;
+const rows = 15;
+const speed = 3; // Pac-Man speed
 
-    function movePacman() {
-      if (pacman.direction === 'right') pacman.x += pacman.speed;
-      if (pacman.direction === 'left') pacman.x -= pacman.speed;
-      if (pacman.direction === 'up') pacman.y -= pacman.speed;
-      if (pacman.direction === 'down') pacman.y += pacman.speed;
-    }
+// Define maze layouts for levels
+const levels = [
+    [
+        [3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 4, 1],
+        [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2, 0, 1],
+        [1, 0, 1, 0, 2, 0, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1],
+        [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 1],
+        [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 1],
+        [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+        [1, 0, 2, 0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 1, 1, 0, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1],
+        [1, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 1, 4, 0, 2, 0, 1],
+        [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 1],
+        [1, 4, 1, 2, 0, 2, 0, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 1],
+        [1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0, 0, 4, 0, 1, 0, 1, 1, 1]
+    ],
+    [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 3, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 1],
+        [1, 0, 1, 0, 2, 0, 2, 0, 0, 1, 0, 0, 2, 1, 1, 1, 1, 2, 1],
+        [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 1],
+        [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 1],
+        [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+    ]
+];
 
-    function detectCollision() {
-      const dx = pacman.x - food.x;
-      const dy = pacman.y - food.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+// Current level index
+let currentLevel = 0;
+let maze = levels[currentLevel];
 
-      if (distance < pacman.radius + food.radius) {
-        food.x = Math.random() * canvas.width;
-        food.y = Math.random() * canvas.height;
-      }
-    }
-
-    function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawPacman();
-      drawFood();
-      movePacman();
-      detectCollision();
-      requestAnimationFrame(gameLoop);
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') pacman.direction = 'right';
-      if (e.key === 'ArrowLeft') pacman.direction = 'left';
-      if (e.key === 'ArrowUp') pacman.direction = 'up';
-      if (e.key === 'ArrowDown') pacman.direction = 'down';
-    });
-
-    gameLoop();
-  </script>
-</body>
-</html>
 
