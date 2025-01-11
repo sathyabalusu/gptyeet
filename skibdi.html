@@ -37,7 +37,7 @@
         #playButton:hover {
             background-color: #f39c12;
         }
-        
+
         #homePage {
             display: block;
             margin-top: 100px;
@@ -102,8 +102,9 @@ let pacMan = {
 
 // Load Pac-Man image
 let pacManImage = new Image();
-pacManImage.src = "https://www.shutterstock.com/image-vector/pixel-almond-nut-icon-vector-260nw-2415989421.jpg"; // Update with the correct image URL
+pacManImage.src = "https://upload.wikimedia.org/wikipedia/commons/7/7a/Arcade_Pac-Man.png"; // Replace with your actual image path
 pacManImage.onload = function() {
+    console.log("Pac-Man image loaded successfully!");
     gameLoop(); // Start the game loop once the Pac-Man image is loaded
 };
 
@@ -115,10 +116,9 @@ let ghosts = [
 
 // Load ghost image
 let ghostImage = new Image();
-ghostImage.src = "https://png.pngtree.com/png-clipart/20240305/original/pngtree-illustration-of-a-cartoon-bug-png-image_14513976.png"; // Update with the correct image URL
-
+ghostImage.src = "https://upload.wikimedia.org/wikipedia/commons/c/c0/PNG_transparency_demonstration_1.png"; // Replace with your actual image path
 ghostImage.onload = function() {
-    gameLoop(); // Start the game loop once the ghost image is loaded
+    console.log("Ghost image loaded successfully!");
 };
 
 // Draw the maze with walls, dots, and exit
@@ -240,3 +240,25 @@ document.addEventListener('keydown', function (e) {
         pacMan.dy = -speed;
         pacMan.dx = 0;
     } else if (e.key === 'ArrowDown') {
+        pacMan.dy = speed;
+        pacMan.dx = 0;
+    } else if (e.key === 'ArrowLeft') {
+        pacMan.dx = -speed;
+        pacMan.dy = 0;
+    } else if (e.key === 'ArrowRight') {
+        pacMan.dx = speed;
+        pacMan.dy = 0;
+    }
+});
+
+// Start the game by switching to the game page
+function startGame() {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    gameLoop();
+}
+</script>
+
+</body>
+</html>
+
