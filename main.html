@@ -3,30 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Number Game</title>
+    <title>HTML with JavaScript</title>
 </head>
 <body>
-    <h1>Guess the Number Game</h1>
-    <p>Guess a number between 1 and 100:</p>
-    <input type="number" id="guess">
-    <button onclick="checkGuess()">Submit Guess</button>
-    <p id="message"></p>
+    <h1>Welcome to My Website</h1>
+    <button id="myButton">Click me</button>
 
+    <!-- JavaScript code added directly inside the HTML file -->
     <script>
-        let secretNumber = Math.floor(Math.random() * 100) + 1;
-
-        function checkGuess() {
-            let userGuess = document.getElementById('guess').value;
-            let message = document.getElementById('message');
-
-            if (userGuess == secretNumber) {
-                message.textContent = "Congratulations! You guessed the right number!";
-            } else if (userGuess > secretNumber) {
-                message.textContent = "Too high! Try again.";
-            } else {
-                message.textContent = "Too low! Try again.";
-            }
+        document.getElementById("myButton").onclick = function() {
+            alert("Hello, World!");
         }
     </script>
 </body>
 </html>
+
+        
