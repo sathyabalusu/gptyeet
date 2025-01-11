@@ -72,7 +72,7 @@
 <!-- Next Level Page -->
 <div id="nextLevelPage">
     <h1>Level Complete!</h1>
-    <p>Congratulations! Get ready for the next level.</p>
+    <p>Heres some informational sustainable practices you can learn about and do, before moving on to the next stage.</p>
     <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
 </div>
 
@@ -98,7 +98,7 @@ const ctx = canvas.getContext("2d");
 const tileSize = 30;
 const cols = 20;
 const rows = 15;
-const speed = 3; // Seed speed
+const speed = 6; // Seed speed
 
 let pacmanX = 180, pacmanY = 180;
 let seedImage = new Image();
@@ -143,7 +143,7 @@ function drawPoints() {
 // Draw Pac-Man as a seed
 function drawPacman() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
+    ctx.drawImage(seedImage, pacmanX - tileSize / 3, pacmanY - tileSize / 3, tileSize, tileSize);
     drawPoints();
     checkForCollisions();
 }
