@@ -63,7 +63,6 @@
 </div>
 
 <script>
-// Define constants for the game
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -72,7 +71,7 @@ const cols = 20;
 const rows = 20;
 const speed = 3; // Pac-Man speed
 
-// Define maze layout (1: wall, 0: path, 2: dot, 3: exit, 4: ghost)
+(1: wall, 0: path, 2: dot, 3: exit, 4: ghost)
 const maze = [
     [3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 4, 2, 1],
@@ -91,7 +90,6 @@ const maze = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3]
 ];
 
-// Define Pac-Man's attributes
 let pacMan = {
     x: tileSize * 1.5,
     y: tileSize * 1.5,
@@ -100,7 +98,6 @@ let pacMan = {
     size: tileSize,
 };
 
-// Load Pac-Man image
 let pacManImage = new Image();
 pacManImage.src = "https://www.shutterstock.com/image-vector/isometric-pixel-pistachio-nut-icon-260nw-2545852387.jpg"; 
 pacManImage.onload = function() {
@@ -108,53 +105,47 @@ pacManImage.onload = function() {
     gameLoop(); 
 };
 
-// Define ghosts
 let ghosts = [
     { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize },
     { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize }
 ];
 
-// Load ghost image
 let ghostImage = new Image();
 ghostImage.src = "https://png.pngtree.com/png-clipart/20240305/original/pngtree-illustration-of-a-cartoon-bug-png-image_14513976.png";
 ghostImage.onload = function() {
     console.log("Ghost image loaded successfully!");
 };
 
-// Draw the maze with walls, dots, and exit
 function drawMaze() {
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             if (maze[row][col] === 1) {
                 ctx.fillStyle = 'green';
-                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize); // Wall
+                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize); 
             } else if (maze[row][col] === 2) {
                 ctx.beginPath();
-                ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); // Dot
+                ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); 
                 ctx.fillStyle = 'white';
                 ctx.fill();
                 ctx.closePath();
             } else if (maze[row][col] === 3) {
-                ctx.fillStyle = 'green'; // Exit
+                ctx.fillStyle = 'green'; 
                 ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
             }
         }
     }
 }
 
-// Draw Pac-Man
 function drawPacMan() {
     ctx.drawImage(pacManImage, pacMan.x, pacMan.y, pacMan.size, pacMan.size);
 }
 
-// Draw ghosts
 function drawGhosts() {
     ghosts.forEach(ghost => {
         ctx.drawImage(ghostImage, ghost.x, ghost.y, ghost.size, ghost.size);
     });
 }
 
-// Update Pac-Man's position and handle collisions
 function updatePacMan() {
     pacMan.x += pacMan.dx;
     pacMan.y += pacMan.dy;
@@ -162,24 +153,24 @@ function updatePacMan() {
     const xPos = Math.floor(pacMan.x / tileSize);
     const yPos = Math.floor(pacMan.y / tileSize);
 
-    // Handle collisions with walls
+
     if (maze[yPos][xPos] === 1) {
         pacMan.x -= pacMan.dx;
         pacMan.y -= pacMan.dy;
     }
 
-    // Handle eating dots
+
     if (maze[yPos][xPos] === 2) {
         maze[yPos][xPos] = 0; // Remove the dot
     }
 
-    // Handle reaching the exit
+
     if (maze[yPos][xPos] === 3) {
         alert('You Win! Pac-Man reached the exit.');
         resetGame();
     }
 
-    // Handle collision with ghosts (Game Over)
+ if (Game Over)
     ghosts.forEach(ghost => {
         const distance = Math.hypot(pacMan.x - ghost.x, pacMan.y - ghost.y);
         if (distance < pacMan.size + ghost.size) {
@@ -189,7 +180,7 @@ function updatePacMan() {
     });
 }
 
-// Update ghosts' positions
+
 function updateGhosts() {
     ghosts.forEach(ghost => {
         ghost.x += ghost.dx * speed;
@@ -205,7 +196,6 @@ function updateGhosts() {
     });
 }
 
-// Reset the game
 function resetGame() {
     pacMan.x = tileSize * 1.5;
     pacMan.y = tileSize * 1.5;
@@ -223,7 +213,7 @@ function resetGame() {
     ghosts[1].dy = 0;
 }
 
-// Game loop
+
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawMaze();
@@ -234,7 +224,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Handle keyboard input for Pac-Man's movement
+
 document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowUp') {
         pacMan.dy = -speed;
@@ -251,7 +241,7 @@ document.addEventListener('keydown', function (e) {
     }
 });
 
-// Start the game by switching to the game page
+
 function startGame() {
     document.getElementById("homePage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
