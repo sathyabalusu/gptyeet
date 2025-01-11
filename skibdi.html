@@ -37,7 +37,7 @@
         #playButton:hover {
             background-color: #f39c12;
         }
-        
+
         #homePage {
             display: block;
             margin-top: 100px;
@@ -45,6 +45,11 @@
 
         #gamePage {
             display: none;
+        }
+
+        #nextLevelPage {
+            display: none;
+            margin-top: 100px;
         }
     </style>
 </head>
@@ -62,6 +67,13 @@
     <canvas id="gameCanvas" width="600" height="470"></canvas>
 </div>
 
+<!-- Next Level Page -->
+<div id="nextLevelPage">
+    <h1>Level Complete!</h1>
+    <p>Congratulations! Get ready for the next level.</p>
+    <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
+</div>
+
 <script>
 // Define constants for the game
 const canvas = document.getElementById("gameCanvas");
@@ -72,36 +84,144 @@ const cols = 20;
 const rows = 15;
 const speed = 3; // Pac-Man speed
 
-// Define maze layouts for levels
-const levels = [
-    [
-        [3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 4, 1],
-        [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2, 0, 1],
-        [1, 0, 1, 0, 2, 0, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1],
-        [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 1],
-        [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 1],
-        [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
-        [1, 0, 2, 0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 1, 1, 0, 1, 0, 1],
-        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1],
-        [1, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 1, 4, 0, 2, 0, 1],
-        [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 1],
-        [1, 4, 1, 2, 0, 2, 0, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 1],
-        [1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0, 0, 4, 0, 1, 0, 1, 1, 1]
-    ],
-    [
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 3, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 1],
-        [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 1],
-        [1, 0, 1, 0, 2, 0, 2, 0, 0, 1, 0, 0, 2, 1, 1, 1, 1, 2, 1],
-        [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 1],
-        [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 1],
-        [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
-    ]
+// Define maze layout (1: wall, 0: path, 2: dot, 3: exit, 4: ghost)
+let maze = [
+    [3, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 2, 0, 2, 0, 4, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 4, 1],
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 2, 0, 1],
+    [1, 0, 1, 0, 2, 0, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 1],
+    [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 1],
+    [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 1],
+    [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+    [1, 0, 2, 0, 2, 0, 2, 1, 2, 0, 2, 0, 2, 1, 1, 0, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1],
+    [1, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 1, 4, 0, 2, 0, 1],
+    [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 1],
+    [1, 4, 1, 2, 0, 2, 0, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 1],
+    [1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0, 0, 4, 0, 1, 0, 1, 1, 1]
 ];
 
-// Current level index
-let currentLevel = 0;
-let maze = levels[currentLevel];
+// Define Pac-Man's attributes
+let pacMan = {
+    x: tileSize * 1.5,
+    y: tileSize * 1.5,
+    dx: speed,
+    dy: 0,
+    size: tileSize,
+};
 
+// Define ghosts
+let ghosts = [
+    { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize },
+    { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize }
+];
 
+// Draw the maze with walls, dots, and exit
+function drawMaze() {
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            if (maze[row][col] === 1) {
+                ctx.fillStyle = 'green';
+                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize); // Wall
+            } else if (maze[row][col] === 2) {
+                ctx.beginPath();
+                ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 5, 0, Math.PI * 2); // Dot
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                ctx.closePath();
+            } else if (maze[row][col] === 3) {
+                ctx.fillStyle = 'green'; // Exit
+                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+            }
+        }
+    }
+}
+
+// Draw Pac-Man
+function drawPacMan() {
+    ctx.fillStyle = 'yellow';
+    ctx.beginPath();
+    ctx.arc(pacMan.x, pacMan.y, pacMan.size / 2, 0.2 * Math.PI, 1.8 * Math.PI);
+    ctx.lineTo(pacMan.x, pacMan.y);
+    ctx.fill();
+}
+
+// Update Pac-Man's position and handle collisions
+function updatePacMan() {
+    pacMan.x += pacMan.dx;
+    pacMan.y += pacMan.dy;
+
+    const xPos = Math.floor(pacMan.x / tileSize);
+    const yPos = Math.floor(pacMan.y / tileSize);
+
+    // Handle collisions with walls
+    if (maze[yPos][xPos] === 1) {
+        pacMan.x -= pacMan.dx;
+        pacMan.y -= pacMan.dy;
+    }
+
+    // Handle eating dots
+    if (maze[yPos][xPos] === 2) {
+        maze[yPos][xPos] = 0; // Remove the dot
+    }
+
+    // Handle reaching the exit
+    if (maze[yPos][xPos] === 3) {
+        document.getElementById("gamePage").style.display = "none";
+        document.getElementById("nextLevelPage").style.display = "block";
+    }
+}
+
+// Game loop
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMaze();
+    drawPacMan();
+    updatePacMan();
+    requestAnimationFrame(gameLoop);
+}
+
+// Handle keyboard input for Pac-Man's movement
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowUp') {
+        pacMan.dy = -speed;
+        pacMan.dx = 0;
+    } else if (e.key === 'ArrowDown') {
+        pacMan.dy = speed;
+        pacMan.dx = 0;
+    } else if (e.key === 'ArrowLeft') {
+        pacMan.dx = -speed;
+        pacMan.dy = 0;
+    } else if (e.key === 'ArrowRight') {
+        pacMan.dx = speed;
+        pacMan.dy = 0;
+    }
+});
+
+// Start the game by switching to the game page
+function startGame() {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    gameLoop();
+}
+
+// Start the next level
+function startNextLevel() {
+    document.getElementById("nextLevelPage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    // Reset maze and Pac-Man position for the next level
+    pacMan.x = tileSize * 1.5;
+    pacMan.y = tileSize * 1.5;
+    pacMan.dx = speed;
+    pacMan.dy = 0;
+
+    // Update the maze layout for the next level (example change)
+    maze[2][2] = 0; // Open a new path
+    maze[12][10] = 3; // New exit position
+
+    gameLoop();
+}
+</script>
+
+</body>
+</html>
