@@ -46,11 +46,6 @@
             display: none;
             position: relative;
         }
-
-        #nextLevelPage {
-            display: none;
-            margin-top: 100px;
-        }
     </style>
 </head>
 <body>
@@ -67,26 +62,12 @@
     <canvas id="gameCanvas" class="canvas-background" width="600" height="470"></canvas>
 </div>
 
-<!-- Next Level Page -->
-<div id="nextLevelPage">
-    <h1>Level Complete!</h1>
-    <p>Here are some informational sustainable practices you can learn about and do, before moving on to the next stage.</p>
-    <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
-</div>
-
 <script>
 // Function to start the game
 function startGame() {
     document.getElementById("homePage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
     initGame();
-}
-
-// Function to start the next level
-function startNextLevel() {
-    document.getElementById("nextLevelPage").style.display = "none";
-    document.getElementById("gamePage").style.display = "block";
-    initGameWithMaze();
 }
 
 // Define constants for the game
@@ -108,50 +89,13 @@ const initialPoints = [
     { x: 300, y: 300 }
 ];
 
-const mazePoints = [
-    { x: 60, y: 60 },
-    { x: 540, y: 60 },
-    { x: 60, y: 400 },
-    { x: 540, y: 400 },
-    { x: 200, y: 250 },
-    { x: 400, y: 250 }
-];
-
 let collectedPoints = [];
-let maze = [];
-let level = 1;
-let mazeWallImage = new Image();
-mazeWallImage.src = 'https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp'; // Replace with the actual path to your soil image
 
 // Initialize the game
 function initGame() {
-    level = 1;
     points = initialPoints;
     document.addEventListener('keydown', movePacman);
-    canvas.style.background = 'url("https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp") no-repeat center center'; // Replace with the actual path to your soil image
-    canvas.style.backgroundSize = 'cover';
     seedImage.onload = drawPacman;
-    drawPoints();
-}
-
-// Initialize the game with a maze
-function initGameWithMaze() {
-    level = 2;
-    points = mazePoints;
-    document.addEventListener('keydown', movePacman);
-    canvas.style.background = '#6f8b66';
-    seedImage.onload = drawPacman;
-    generateMaze();
-    drawMaze();
-    drawPoints();
-}
-
-// Reset the game for the next level
-function resetGame() {
-    pacmanX = 180;
-    pacmanY = 180;
-    collectedPoints = [];
-    drawPacman();
     drawPoints();
 }
 
@@ -171,7 +115,6 @@ function drawPoints() {
 // Draw Pac-Man as a seed
 function drawPacman() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (level === 2) drawMaze(); // Draw maze if level 2
     ctx.drawImage(seedImage, pacmanX - tileSize / 2, pacmanY - tileSize / 2, tileSize, tileSize);
     drawPoints();
     checkForCollisions();
@@ -196,20 +139,9 @@ function movePacman(event) {
             nextX += step;
             break;
     }
-    // Check for wall collisions only in level 2
-    if (level === 1 || !isWall(nextX, nextY)) {
-        pacmanX = nextX;
-        pacmanY = nextY;
-    }
+    pacmanX = nextX;
+    pacmanY = nextY;
     drawPacman();
-}
-
-// Check if the position is a wall
-function isWall(x, y) {
-    return maze.some(wall => 
-        x >= wall.x && x <= wall.x + wall.width &&
-        y >= wall.y && y <= wall.y + wall.height
-    );
 }
 
 // Check for collisions with points
@@ -220,51 +152,7 @@ function checkForCollisions() {
             Math.abs(pacmanY - point.y) < tileSize / 2) {
             collectedPoints.push(point);
             drawPoints();
-            if (collectedPoints.length === points.length) {
-                document.getElementById("gamePage").style.display = "none";
-                document.getElementById("nextLevelPage").style.display = "block";
-            }
         }
-    });
-}
-
-// Generate a simple maze for the next level
-function generateMaze() {
-    const mazePattern = [
-        "11111111111111111111",
-        "10000000001100000001",
-        "10111111101101111101",
-        "10100000100000000101",
-        "10101111101111110101",
-        "10100000000000100101",
-        "10111110111110111101",
-        "10000000100010000001",
-        "10111111111111111101",
-        "10000000000000000001",
-        "11111111111111111111",
-    ];
-
-    maze = [];
-    mazePattern.forEach((row, rowIndex) => {
-        row.split('').forEach((cell, colIndex) => {
-            if (cell === '0') { // Representing the walls now as 0
-                maze.push({
-                    x: colIndex * tileSize,
-                    y: rowIndex * tileSize,
-                    width: tileSize,
-                    height: tileSize
-                });
-            }
-        });
-    });
-}
-
-// Draw the maze on the canvas
-function drawMaze() {
-    ctx.fillStyle = "#6f8b66"; // Sage green background
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    maze.forEach(wall => {
-        ctx.drawImage(mazeWallImage, wall.x, wall.y, wall.width, wall.height);
     });
 }
 
