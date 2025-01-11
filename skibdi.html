@@ -1,102 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pac-Man Game</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: black;
-    }
-
-    canvas {
-      border: 1px solid white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Game</title>
+    <style>
+        body {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+        }
+        canvas {
+            border: 2px solid #fff;
+            background-color: #111;
+        }
+        h1 {
+            color: white;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="pacman" width="400" height="400"></canvas>
-  <script>
-    const canvas = document.getElementById('pacman');
-    const ctx = canvas.getContext('2d');
+    <h1>Pac-Man Game</h1>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    
+    <script>
+        // Get the canvas and context
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
-    const pacman = {
-      x: 50,
-      y: 50,
-      radius: 20,
-      speed: 5,
-      direction: 'right',
-    };
+        // Game settings
+        const tileSize = 30;
+        const cols = 20;
+        const rows = 20;
+        const speed = 5; // Pac-Man speed
 
-    const food = {
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: 10,
-    };
+        // Maze layout (1 is wall, 0 is path)
+        const maze = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1],
+            [1,0,1,0,0,0,0,1,1,1,1,1,0,1,1,1,1,0,0,1],
+            [1,0,1,0,1,1,0,1,0,0,1,1,0,0,0,0,1,1,0,1],
+            [1,0,1,0,0,0,0,1,0,0,1,0,0,1,1,0,1,0,0,1],
+            [1,0,1,1,1,1,0,1,0,1,1,1,0,1,1,0,1,0,0,1],
+            [1,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,1,0,0,1],
+            [1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,0,0,0,1],
+            [1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,1,1],
+            [1,0,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        ];
 
-    function drawPacman() {
-      ctx.beginPath();
-      ctx.arc(pacman.x, pacman.y, pacman.radius, 0.2 * Math.PI, 1.8 * Math.PI);
-      ctx.lineTo(pacman.x, pacman.y);
-      ctx.fillStyle = 'yellow';
-      ctx.fill();
-      ctx.closePath();
-    }
+        // Pac-Man initial position and movement direction
+        let pacMan = {
+            x: tileSize * 1.5,
+            y: tileSize * 1.5,
+            dx: speed,
+            dy: 0,
+            size: tileSize / 2,
+        };
 
-    function drawFood() {
-      ctx.beginPath();
-      ctx.arc(food.x, food.y, food.radius, 0, 2 * Math.PI);
-      ctx.fillStyle = 'red';
-      ctx.fill();
-      ctx.closePath();
-    }
+        // Function to draw the maze
+        function drawMaze() {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    if (maze[row][col] === 1) {
+                        ctx.fillStyle = 'blue';
+                        ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                    }
+                }
+            }
+        }
 
-    function movePacman() {
-      if (pacman.direction === 'right') pacman.x += pacman.speed;
-      if (pacman.direction === 'left') pacman.x -= pacman.speed;
-      if (pacman.direction === 'up') pacman.y -= pacman.speed;
-      if (pacman.direction === 'down') pacman.y += pacman.speed;
-    }
+        // Function to draw Pac-Man
+        function drawPacMan() {
+            ctx.beginPath();
+            ctx.arc(pacMan.x, pacMan.y, pacMan.size, 0.2 * Math.PI, 1.8 * Math.PI); // Partial circle
+            ctx.lineTo(pacMan.x, pacMan.y);
+            ctx.fillStyle = "yellow";
+            ctx.fill();
+            ctx.closePath();
+        }
 
-    function detectCollision() {
-      const dx = pacman.x - food.x;
-      const dy = pacman.y - food.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+        // Function to update Pac-Man's position
+        function updatePacMan() {
+            pacMan.x += pacMan.dx;
+            pacMan.y += pacMan.dy;
 
-      if (distance < pacman.radius + food.radius) {
-        food.x = Math.random() * canvas.width;
-        food.y = Math.random() * canvas.height;
-      }
-    }
+            // Handle wall collisions
+            if (pacMan.x - pacMan.size < 0 || pacMan.x + pacMan.size > canvas.width || maze[Math.floor(pacMan.y / tileSize)][Math.floor(pacMan.x / tileSize)] === 1) {
+                pacMan.x -= pacMan.dx;
+            }
+            if (pacMan.y - pacMan.size < 0 || pacMan.y + pacMan.size > canvas.height || maze[Math.floor(pacMan.y / tileSize)][Math.floor(pacMan.x / tileSize)] === 1) {
+                pacMan.y -= pacMan.dy;
+            }
+        }
 
-    function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawPacman();
-      drawFood();
-      movePacman();
-      detectCollision();
-      requestAnimationFrame(gameLoop);
-    }
+        // Function to handle user input for Pac-Man movement
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowUp') {
+                pacMan.dy = -speed;
+                pacMan.dx = 0;
+            } else if (e.key === 'ArrowDown') {
+                pacMan.dy = speed;
+                pacMan.dx = 0;
+            } else if (e.key === 'ArrowLeft') {
+                pacMan.dx = -speed;
+                pacMan.dy = 0;
+            } else if (e.key === 'ArrowRight') {
+                pacMan.dx = speed;
+                pacMan.dy = 0;
+            }
+        });
 
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') pacman.direction = 'right';
-      if (e.key === 'ArrowLeft') pacman.direction = 'left';
-      if (e.key === 'ArrowUp') pacman.direction = 'up';
-      if (e.key === 'ArrowDown') pacman.direction = 'down';
-    });
+        // Game loop function
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawMaze();
+            drawPacMan();
+            updatePacMan();
+            requestAnimationFrame(gameLoop); // Repeat the game loop
+        }
 
-    gameLoop();
-  </script>
-</body>
-</html>
-
-
+        // Start the game loop
+        gameLoop();
+    </script>
 </body>
 </html>
 
