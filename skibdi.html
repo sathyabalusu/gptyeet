@@ -60,7 +60,7 @@
 <!-- Home Page -->
 <div id="homePage">
     <h1>Plant up: Click to start playing</h1>
-    <button id="playButton" onclick="startGame()">Play</button>
+    <button id="playButton">Play</button>
 </div>
 
 <!-- Game Page -->
@@ -73,32 +73,29 @@
 <div id="nextLevelPage">
     <h1>Level Complete!</h1>
     <p>Congratulations! Get ready for the next level.</p>
-    <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
+    <button id="nextLevelButton">Next Level</button>
 </div>
 
 <script>
 // Function to start the game
-function startGame() {
+document.getElementById("playButton").addEventListener("click", function() {
     document.getElementById("homePage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
     initGame();
-}
+});
 
-// Function to start the next level
-function startNextLevel() {
+document.getElementById("nextLevelButton").addEventListener("click", function() {
     document.getElementById("nextLevelPage").style.display = "none";
     document.getElementById("gamePage").style.display = "block";
-    resetGame();
-}
+    initLevel2();
+});
 
 // Define constants for the game
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const tileSize = 40; // Increased seed size
-const cols = 20;
-const rows = 15;
-const speed = 6; // Seed speed
+const speed = 10; // Seed speed
 
 let pacmanX = 180, pacmanY = 180;
 let seedImage = new Image();
@@ -110,11 +107,14 @@ const initialPoints = [
     { x: 300, y: 300 }
 ];
 
+let points = initialPoints;
 let collectedPoints = [];
 
 // Initialize the game
 function initGame() {
-    points = initialPoints;
+    collectedPoints = [];
+    pacmanX = 180;
+    pacmanY = 180;
     document.addEventListener('keydown', movePacman);
     seedImage.onload = drawPacman;
     drawPoints();
@@ -141,9 +141,9 @@ function drawPacman() {
     checkForCollisions();
 }
 
-// Move Pac-Man
+// Move Pac-Man with wall collision detection
 function movePacman(event) {
-    const step = 10;
+    const step = speed;
     let nextX = pacmanX;
     let nextY = pacmanY;
     switch (event.key) {
@@ -160,9 +160,38 @@ function movePacman(event) {
             nextX += step;
             break;
     }
-    pacmanX = nextX;
-    pacmanY = nextY;
+
+    // Check for collisions with walls
+    if (!isCollision(nextX, nextY)) {
+        pacmanX = nextX;
+        pacmanY = nextY;
+    }
+
     drawPacman();
+}
+
+// Check for collisions with walls
+function isCollision(x, y) {
+    const walls = [
+        { x: 50, y: 0, width: 20, height: 150 },
+        { x: 150, y: 100, width: 20, height: 370 },
+        { x: 250, y: 0, width: 20, height: 200 },
+        { x: 350, y: 50, width: 20, height: 370 },
+        { x: 450, y: 0, width: 20, height: 200 },
+        { x: 550, y: 100, width: 20, height: 370 },
+        { x: 0, y: 50, width: 100, height: 20 },
+        { x: 100, y: 150, width: 200, height: 20 },
+        { x: 200, y: 250, width: 100, height: 20 },
+        { x: 300, y: 150, width: 200, height: 20 },
+        { x: 400, y: 250, width: 100, height: 20 }
+    ];
+
+    return walls.some(wall => 
+        x + tileSize / 2 > wall.x && 
+        x - tileSize / 2 < wall.x + wall.width &&
+        y + tileSize / 2 > wall.y &&
+        y - tileSize / 2 < wall.y + wall.height
+    );
 }
 
 // Check for collisions with points
@@ -181,7 +210,42 @@ function checkForCollisions() {
     });
 }
 
-</script>
+// Initialize Level 2
+function initLevel2() {
+    points = [
+        { x: 50, y: 50 },
+        { x: 550, y: 50 },
+        { x: 50, y: 420 },
+        { x: 550, y: 420 },
+        { x: 300, y: 200 },
+        { x: 300, y: 350 }
+    ];
+    collectedPoints = [];
+    pacmanX = 30;
+    pacmanY = 30;
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
+    drawMaze();
+    drawPoints();
+}
 
+// Draw the maze for Level 2
+function drawMaze() {
+    const mazePattern = [
+        "1111111111",
+        "22222222",
+        "1112111111"
+    ];
+
+    ctx.fillStyle = "#6f8b66";
+    mazePattern.forEach((row, rowIndex) => {
+        row.split("").forEach((cell, colIndex) => {
+            if (cell === "1") {
+                ctx.fillRect(colIndex * tileSize, rowIndex * tileSize, tileSize, tileSize);
+            }
+        });
+    });
+}
+</script>
 </body>
 </html>
