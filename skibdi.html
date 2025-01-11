@@ -93,10 +93,10 @@ function startNextLevel() {
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const tileSize = 40; //
+const tileSize = 40; // Increased seed size
 const cols = 20;
 const rows = 15;
-const speed = 6; // 
+const speed = 6; // Seed speed
 
 let pacmanX = 180, pacmanY = 180;
 let seedImage = new Image();
@@ -109,10 +109,10 @@ const initialPoints = [
 ];
 
 const mazePoints = [
-    { x: 80, y: 80 },
-    { x: 540, y: 70 },
+    { x: 60, y: 60 },
+    { x: 540, y: 60 },
     { x: 60, y: 400 },
-    { x: 540, y: 490 },
+    { x: 540, y: 400 },
     { x: 200, y: 250 },
     { x: 400, y: 250 }
 ];
@@ -121,14 +121,14 @@ let collectedPoints = [];
 let maze = [];
 let level = 1;
 let mazeWallImage = new Image();
-mazeWallImage.src = 'https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp'; 
+mazeWallImage.src = 'https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp'; // Replace with the actual path to your soil image
 
 // Initialize the game
 function initGame() {
     level = 1;
     points = initialPoints;
     document.addEventListener('keydown', movePacman);
-    canvas.style.background = 'url("https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp") no-repeat center center'; 
+    canvas.style.background = 'url("https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp") no-repeat center center'; // Replace with the actual path to your soil image
     canvas.style.backgroundSize = 'cover';
     seedImage.onload = drawPacman;
     drawPoints();
@@ -146,6 +146,7 @@ function initGameWithMaze() {
     drawPoints();
 }
 
+// Reset the game for the next level
 function resetGame() {
     pacmanX = 180;
     pacmanY = 180;
@@ -154,6 +155,7 @@ function resetGame() {
     drawPoints();
 }
 
+// Draw points on the canvas
 function drawPoints() {
     ctx.fillStyle = "yellow";
     points.forEach(point => {
@@ -165,6 +167,8 @@ function drawPoints() {
         }
     });
 }
+
+// Draw Pac-Man as a seed
 function drawPacman() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (level === 2) drawMaze(); // Draw maze if level 2
@@ -181,13 +185,18 @@ function movePacman(event) {
     switch (event.key) {
         case 'ArrowUp':
             nextY -= step;
+            break;
         case 'ArrowDown':
             nextY += step;
+            break;
         case 'ArrowLeft':
             nextX -= step;
+            break;
         case 'ArrowRight':
             nextX += step;
+            break;
     }
+    // Check for wall collisions only in level 2
     if (level === 1 || !isWall(nextX, nextY)) {
         pacmanX = nextX;
         pacmanY = nextY;
@@ -195,12 +204,15 @@ function movePacman(event) {
     drawPacman();
 }
 
+// Check if the position is a wall
 function isWall(x, y) {
     return maze.some(wall => 
         x >= wall.x && x <= wall.x + wall.width &&
         y >= wall.y && y <= wall.y + wall.height
     );
 }
+
+// Check for collisions with points
 function checkForCollisions() {
     points.forEach(point => {
         if (!collectedPoints.includes(point) && 
@@ -235,7 +247,7 @@ function generateMaze() {
     maze = [];
     mazePattern.forEach((row, rowIndex) => {
         row.split('').forEach((cell, colIndex) => {
-            if (cell === '0') { 
+            if (cell === '0') { // Representing the walls now as 0
                 maze.push({
                     x: colIndex * tileSize,
                     y: rowIndex * tileSize,
