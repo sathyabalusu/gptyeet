@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,14 +94,18 @@ const maze = [
 ];
 
 // Define Pac-Man's attributes
-let pacMan = [
-    { x: tileSize * 15, y: tileSize * 15, dx: 1, dy: 0, size: tileSize },
-[;
+let pacMan = {
+    x: tileSize * 1.5,
+    y: tileSize * 1.5,
+    dx: speed,
+    dy: 0,
+    size: tileSize,
+};
 
 // Define ghosts
-let ghosts = 
-    { x: tileSize * 15, y: tileSize * 15, dx: 1, dy: 0, size: tileSize },
-  
+let ghosts = [
+    { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize },
+    { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize }
 ];
 
 // Draw the maze with walls, dots, and exit
