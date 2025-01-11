@@ -21,7 +21,6 @@
 
         canvas {
             border: 2px solid #fff; 
-            background: #6f8b66; /* Sage green background */
         }
 
         #playButton {
@@ -46,7 +45,6 @@
         #gamePage {
             display: none;
             position: relative;
-            background-color: #6f8b66; /* Sage green background */
         }
 
         #nextLevelPage {
@@ -66,7 +64,7 @@
 <!-- Game Page -->
 <div id="gamePage">
     <h1>Plant up!</h1>
-    <canvas id="gameCanvas" width="600" height="470"></canvas>
+    <canvas id="gameCanvas" class="canvas-background" width="600" height="470"></canvas>
 </div>
 
 <!-- Next Level Page -->
@@ -111,10 +109,10 @@ const initialPoints = [
 ];
 
 const mazePoints = [
-    { x: 50, y: 50 },
-    { x: 550, y: 50 },
-    { x: 50, y: 400 },
-    { x: 550, y: 400 },
+    { x: 60, y: 60 },
+    { x: 540, y: 60 },
+    { x: 60, y: 400 },
+    { x: 540, y: 400 },
     { x: 200, y: 250 },
     { x: 400, y: 250 }
 ];
@@ -122,12 +120,16 @@ const mazePoints = [
 let collectedPoints = [];
 let maze = [];
 let level = 1;
+let mazeWallImage = new Image();
+mazeWallImage.src = 'https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp'; // Replace with the actual path to your soil image
 
 // Initialize the game
 function initGame() {
     level = 1;
     points = initialPoints;
     document.addEventListener('keydown', movePacman);
+    canvas.style.background = 'url("https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp") no-repeat center center'; // Replace with the actual path to your soil image
+    canvas.style.backgroundSize = 'cover';
     seedImage.onload = drawPacman;
     drawPoints();
 }
@@ -137,6 +139,7 @@ function initGameWithMaze() {
     level = 2;
     points = mazePoints;
     document.addEventListener('keydown', movePacman);
+    canvas.style.background = '#6f8b66';
     seedImage.onload = drawPacman;
     generateMaze();
     drawMaze();
@@ -244,7 +247,7 @@ function generateMaze() {
     maze = [];
     mazePattern.forEach((row, rowIndex) => {
         row.split('').forEach((cell, colIndex) => {
-            if (cell === '1') {
+            if (cell === '0') { // Representing the walls now as 0
                 maze.push({
                     x: colIndex * tileSize,
                     y: rowIndex * tileSize,
@@ -258,8 +261,10 @@ function generateMaze() {
 
 // Draw the maze on the canvas
 function drawMaze() {
+    ctx.fillStyle = "#6f8b66"; // Sage green background
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     maze.forEach(wall => {
-        ctx.drawImage(seedImage, wall.x, wall.y, wall.width, wall.height);
+        ctx.drawImage(mazeWallImage, wall.x, wall.y, wall.width, wall.height);
     });
 }
 
