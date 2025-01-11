@@ -53,7 +53,7 @@
 <!-- Home Page -->
 <div id="homePage">
     <h1>Plant up: Click to start playing</h1>
-    <button> id="playButton" onclick="startGame()"></button>
+    <button id="playButton" onclick="startGame()">Play</button>
 </div>
 
 <!-- Game Page -->
@@ -92,12 +92,19 @@ const maze = [
 ];
 
 // Define Pac-Man's attributes
-let pacManImage = new Image();
-pacManImage.src = "https://png.pngtree.com/png-clipart/20220110/ourmid/pngtree-cartoon-hand-painted-plant-saplings-png-image_4278819.png";  
+let pacMan = {
+    x: tileSize * 1.5,
+    y: tileSize * 1.5,
+    dx: speed,
+    dy: 0,
+    size: tileSize,
+};
 
 // Define ghosts
-let ghostImage = new Image();
-ghostImage.src = "https://png.pngtree.com/png-clipart/20240305/original/pngtree-illustration-of-a-cartoon-bug-png-image_14513976.png";
+let ghosts = [
+    { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize },
+    { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize }
+];
 
 // Draw the maze with walls, dots, and exit
 function drawMaze() {
@@ -120,6 +127,17 @@ function drawMaze() {
     }
 }
 
+// Draw Pac-Man
+function drawPacMan() {
+    ctx.drawImage(pacManImage, pacMan.x, pacMan.y, pacMan.size, pacMan.size);
+}
+
+// Draw ghosts
+function drawGhosts() {
+    ghosts.forEach(ghost => {
+        ctx.drawImage(ghostImage, ghost.x, ghost.y, ghost.size, ghost.size);
+    });
+}
 
 // Update Pac-Man's position and handle collisions
 function updatePacMan() {
@@ -194,10 +212,10 @@ function resetGame() {
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawMaze();
-    drawPacMan(https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fpixel-art-seed%3Fimage_type%3Dvector&psig=AOvVaw0rMnoLCW_AzHq6ZYBuYxJU&ust=1736665362503000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLi-6uGM7YoDFQAAAAAdAAAAABAE); 
-    drawGhosts(https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Ffreepng%2Fillustration-of-a-cartoon-bug_14513976.html&psig=AOvVaw0ccEG3buGaJdsgntyg83jS&ust=1736667239915000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICzp-GT7YoDFQAAAAAdAAAAABAE);
-    updatePacMan(https://www.google.com/url?sa=i&url=https%3A%2F%2Fpngtree.com%2Fso%2Fsapling-clipart&psig=AOvVaw0OjA2TNphDx_wrO4QxxNPu&ust=1736668032765000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOChw9uW7YoDFQAAAAAdAAAAABAI);
-    updateGhosts(https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.alamy.com%2Fstock-photo%2Fcartoon-bug.html&psig=AOvVaw0ccEG3buGaJdsgntyg83jS&ust=1736667239915000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICzp-GT7YoDFQAAAAAdAAAAABAJ);
+    drawPacMan();
+    drawGhosts();
+    updatePacMan();
+    updateGhosts();
     requestAnimationFrame(gameLoop);
 }
 
@@ -205,16 +223,16 @@ function gameLoop() {
 document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowUp') {
         pacMan.dy = -speed;
-        pacMan.dx = 25;
+        pacMan.dx = 0;
     } else if (e.key === 'ArrowDown') {
         pacMan.dy = speed;
-        pacMan.dx = 25;
+        pacMan.dx = 0;
     } else if (e.key === 'ArrowLeft') {
         pacMan.dx = -speed;
-        pacMan.dy = 25;
+        pacMan.dy = 0;
     } else if (e.key === 'ArrowRight') {
         pacMan.dx = speed;
-        pacMan.dy = 25;
+        pacMan.dy = 0;
     }
 });
 
