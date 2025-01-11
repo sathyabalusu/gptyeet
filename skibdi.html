@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pac-Man Game</title>
+    <title>Plant Up</title>
     <style>
         body {
             font-family: comic sans, sans-serif;
@@ -81,14 +81,14 @@ const maze = [
     [1, 0, 1, 0, 2, 0, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 2, 2, 1],
     [1, 2, 1, 2, 1, 1, 0, 1, 0, 2, 1, 1, 0, 2, 0, 2, 1, 0, 0, 1],
     [1, 0, 1, 0, 2, 0, 2, 1, 2, 0, 1, 0, 2, 1, 1, 0, 1, 0, 2, 1],
-    [1, 2, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1],
+    [1, 2, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1],
     [1, 0, 2, 0, 2, 1, 2, 1, 2, 0, 2, 0, 2, 1, 1, 0, 1, 0, 2, 1],
     [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
     [1, 0, 2, 0, 2, 4, 2, 0, 2, 0, 2, 0, 2, 1, 4, 0, 2, 0, 2, 1],
     [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 0, 1],
     [1, 4, 1, 2, 0, 2, 0, 2, 0, 2, 1, 0, 2, 1, 1, 1, 1, 1, 2, 1],
-    [1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 4, 0, 1, 0, 1, 1, 0, 1],
-    [1, 0, 2, 0, 1, 0, 2, 0, 1, 2, 1, 1, 2, 1, 0, 2, 1, 0, 2, 0],
+    [1, 2, 1, 0, 1, 1, 1, 1, 1, 2, 0, 0, 4, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 2, 0, 0, 0, 2, 0, 1, 1, 1, 1, 2, 1, 0, 2, 1, 0, 2, 0],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 3]
 ];
 
@@ -101,26 +101,11 @@ let pacMan = {
     size: tileSize,
 };
 
-// Load Pac-Man image
-let pacManImage = new Image();
-pacManImage.src = "https://www.shutterstock.com/image-vector/pixel-almond-nut-icon-vector-260nw-2415989421.jpg"; // Update with the correct image URL
-pacManImage.onload = function() {
-    gameLoop(); // Start the game loop once the Pac-Man image is loaded
-};
-
 // Define ghosts
 let ghosts = [
     { x: tileSize * 5, y: tileSize * 5, dx: 1, dy: 0, size: tileSize },
     { x: tileSize * 14, y: tileSize * 5, dx: -1, dy: 0, size: tileSize }
 ];
-
-// Load ghost image
-let ghostImage = new Image();
-ghostImage.src = "https://png.pngtree.com/png-clipart/20240305/original/pngtree-illustration-of-a-cartoon-bug-png-image_14513976.png"; // Update with the correct image URL
-
-ghostImage.onload = function() {
-    gameLoop(); // Start the game loop once the ghost image is loaded
-};
 
 // Draw the maze with walls, dots, and exit
 function drawMaze() {
@@ -241,3 +226,24 @@ document.addEventListener('keydown', function (e) {
         pacMan.dy = -speed;
         pacMan.dx = 0;
     } else if (e.key === 'ArrowDown') {
+        pacMan.dy = speed;
+        pacMan.dx = 0;
+    } else if (e.key === 'ArrowLeft') {
+        pacMan.dx = -speed;
+        pacMan.dy = 0;
+    } else if (e.key === 'ArrowRight') {
+        pacMan.dx = speed;
+        pacMan.dy = 0;
+    }
+});
+
+// Start the game by switching to the game page
+function startGame() {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("gamePage").style.display = "block";
+    gameLoop();
+}
+</script>
+
+</body>
+</html>
