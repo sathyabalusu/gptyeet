@@ -89,6 +89,14 @@
     <button id="nextLevelButton2" onclick="startNextLevel()">Next Level</button>
 </div>
 
+<!-- Next Level Page 3 -->
+<div id="nextLevelPage3">
+    <h1>Level Complete!</h1>
+    <p>Are you ready to see what flower this grows into?! Just a little more time in the sunlight, plenty of water, and to get rid of those annoying little white flies that always infest plants like these; with a natural, non toxic solution! Just spray some neem oil on the plants where you see the flies, and just like that, they're gone!
+ </p>
+    <button id="nextLevelButton3" onclick="startNextLevel()">Next Level</button>
+</div>
+
 <script>
 let canvas, ctx;
 let pacmanX, pacmanY, seedImage, points, collectedPoints;
@@ -220,7 +228,7 @@ function initLevel1() {
     drawPoints();
 }
 
-// Initialize Level 3
+// Initialize Level 2
 function initLevel2() {
     points = [
         { x: 50, y: 50 },
