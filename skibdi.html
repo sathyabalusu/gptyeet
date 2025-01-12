@@ -53,12 +53,18 @@
             display: none;
             margin-top: 100px;
         }
-
+        
+        #gamePage {
+            display: none;
+            position: relative;
+        {
+        
         #nextLevelPage2 {
             display: none;
             margin-top: 100px;
         }
-    </style>
+   
+</style>
 </head>
 <body>
 
@@ -76,7 +82,7 @@
 </div>
 
 <!-- Next Level Page -->
-<div id="nextLevelPage1">
+<div id="nextLevelPage">
     <h1>Level Complete!</h1>
     <p>See, now the seed grew into a sapling!!! All with just some water and sunlight, and it's growing! Time to level up! </p>
     <button id="nextLevelButton" onclick="startNextLevel()">Next Level</button>
@@ -85,8 +91,7 @@
 <!-- Next Level Page 2 -->
 <div id="nextLevelPage2">
     <h1>Level Complete!</h1>
-    <p>Are you ready to see what flower this grows into?! Just a little more time in the sunlight, plenty of water, and to get rid of those annoying little white flies that always infest plants like these; with a natural, non toxic solution! Just spray some neem oil on the plants where you see the flies, and just like that, they're gone!
- </p>
+    <p>See, now the seed grew into a sapling!!! All with just some water and sunlight, and it's growing! Time to level up! </p>
     <button id="nextLevelButton2" onclick="startNextLevel()">Next Level</button>
 </div>
 
@@ -221,8 +226,8 @@ function initLevel1() {
     drawPoints();
 }
 
-// Initialize Level 2
-function initLevel2() {
+// Initialize Level 3
+function initLevel3() {
     points = [
         { x: 50, y: 50 },
         { x: 550, y: 50 },
