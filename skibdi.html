@@ -85,7 +85,7 @@
 <!-- Next Level Page 2 -->
 <div id="nextLevelPage2">
     <h1>Level Complete!</h1>
-    <p>Are you ready to see what flower this grows into?! Just a little more time in the sunlight, plenty of water, and to get rid of those annoying little white flies that always infest plants like these; with a natural, non toxic solution! Just spray some neem oil on the plants where you see the flies, and just like that, they're gone</p>
+    <p>See, now the seed grew into a sapling!!! All with just some water and sunlight, and it's growing! Time to level up! </p>
     <button id="nextLevelButton2" onclick="startNextLevel()">Next Level</button>
 </div>
 
@@ -112,6 +112,7 @@ function startGame() {
 function startNextLevel() {
     if (currentLevel === 1) {
         document.getElementById("nextLevelPage").style.display = "none";
+        initLevel2();
     } else if (currentLevel === 2) {
         document.getElementById("nextLevelPage2").style.display = "none";
         initLevel3();
@@ -213,23 +214,7 @@ function initLevel1() {
     collectedPoints = [];
     pacmanX = 30;
     pacmanY = 30;
-    document.addEventListener('keydown', movePacman);
-    seedImage.onload = drawPacman;
-    drawPoints();
-}
-
-// Initialize Level 2
-function initLevel2() {
-    points = [
-        { x: 200, y: 200 },
-        { x: 300, y: 300 },
-        { x: 50, y: 50 },
-        { x: 550, y: 50 },
-        { x: 50, y: 420 }
-    ];
-    collectedPoints = [];
-    pacmanX = 30;
-    pacmanY = 30;
+    seedImage.src = 'https://static.vecteezy.com/system/resources/previews/037/332/950/original/small-sapling-icon-free-png.png';
     document.addEventListener('keydown', movePacman);
     seedImage.onload = drawPacman;
     drawPoints();
@@ -253,10 +238,36 @@ function initLevel3() {
     collectedPoints = [];
     pacmanX = 30;
     pacmanY = 30;
+    seedImage.src = ''; // Replace with your new image URL
     document.addEventListener('keydown', movePacman);
     seedImage.onload = drawPacman;
     drawPoints();
 }
+
+// Initialize Level 3
+function initLevel3() {
+    points = [
+        { x: 50, y: 50 },
+        { x: 550, y: 50 },
+        { x: 50, y: 420 },
+        { x: 550, y: 420 },
+        { x: 300, y: 200 },
+        { x: 300, y: 350 },
+        { x: 450, y: 200 },
+        { x: 100, y: 350 },
+        { x: 200, y: 150 },
+        { x: 400, y: 300 },
+        { x: 450, y: 420 }
+    ];
+    collectedPoints = [];
+    pacmanX = 30;
+    pacmanY = 30;
+    seedImage.src = 'https://png.pngtree.com/png-vector/20240803/ourlarge/pngtree-cute-cartoon-flower-clipart-illustration-png-image_13365776.png'; // Replace with your new image URL
+    document.addEventListener('keydown', movePacman);
+    seedImage.onload = drawPacman;
+    drawPoints();
+}
+
 </script>
 </body>
 </html>
