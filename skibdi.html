@@ -20,7 +20,7 @@
         }
 
         canvas {
-            border: 2px solid #fff; 
+            border: 2px solid #fff;
             background: url('https://pics.craiyon.com/2023-12-01/pnUsMci_RCmb3UOGuAI69g.webp') no-repeat center center;
             background-size: cover;
         }
@@ -54,17 +54,11 @@
             margin-top: 100px;
         }
         
-        #gamePage {
-            display: none;
-            position: relative;
-        {
-        
         #nextLevelPage2 {
             display: none;
             margin-top: 100px;
         }
-   
-</style>
+    </style>
 </head>
 <body>
 
@@ -123,6 +117,7 @@ function startNextLevel() {
         document.getElementById("nextLevelPage2").style.display = "none";
         initLevel3();
     }
+    currentLevel++;
     document.getElementById("gamePage").style.display = "block";
 }
 
@@ -226,25 +221,17 @@ function initLevel1() {
     drawPoints();
 }
 
-// Initialize Level 3
-function initLevel3() {
+// Initialize Level 2
+function initLevel2() {
     points = [
-        { x: 50, y: 50 },
-        { x: 550, y: 50 },
-        { x: 50, y: 420 },
-        { x: 550, y: 420 },
-        { x: 300, y: 200 },
-        { x: 300, y: 350 },
-        { x: 450, y: 200 },
-        { x: 100, y: 350 },
-        { x: 200, y: 150 },
-        { x: 400, y: 300 },
-        { x: 450, y: 420 }
+        { x: 100, y: 100 },
+        { x: 200, y: 200 },
+        { x: 300, y: 300 }
     ];
     collectedPoints = [];
     pacmanX = 30;
     pacmanY = 30;
-    seedImage.src = 'https://png.pngtree.com/element_our/20190531/ourmid/pngtree-cartoon-sprouted-sapling-image_1316269.jpg'; // Replace with your new image URL
+    seedImage.src = 'https://img.freepik.com/premium-vector/pixel-art-illustration-coffee-bean-pixelated-coffee-bean-coffee-bean-pixelated-pixel-art_1038602-1029.jpg';
     document.addEventListener('keydown', movePacman);
     seedImage.onload = drawPacman;
     drawPoints();
@@ -265,14 +252,6 @@ function initLevel3() {
         { x: 400, y: 300 },
         { x: 450, y: 420 }
     ];
-    collectedPoints = [];
-    pacmanX = 30;
-    pacmanY = 30;
-    seedImage.src = 'https://png.pngtree.com/png-vector/20240803/ourlarge/pngtree-cute-cartoon-flower-clipart-illustration-png-image_13365776.png'; // Replace with your new image URL
-    document.addEventListener('keydown', movePacman);
-    seedImage.onload = drawPacman;
-    drawPoints();
-}
 
 </script>
 </body>
